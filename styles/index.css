@@ -1,7 +1,14 @@
 body {
-  background-color: #FAFAFA;
+  background-color: #ffffff;
 }
 
 svg {
-  background-color: #FAFAFA;
+  background-color: #ffffff;
+}
+
+path {
+  fill: rgb(105, 105, 105);
+  opacity: 0.6;
+  stroke: rgb(0, 0, 0);
+  stroke-width: 1;
 }
