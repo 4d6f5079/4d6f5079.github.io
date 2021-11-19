@@ -11,4 +11,5 @@ path {
   opacity: 0.6;
   stroke: rgb(0, 0, 0);
   stroke-width: 1;
+  cursor: pointer;
 }

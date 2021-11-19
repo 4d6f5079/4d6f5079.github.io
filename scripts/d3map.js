@@ -3,12 +3,9 @@ var width		= 750,
     height		= 750,
     defaultScale = 8700,
     centerLat	= 5.5,	
-    centerLon  	= 52.2;
-
-var scaleMinExtent = 1; // = default scale
-var scaleMaxExtent = 8; 
-var translateMaxXExtent = width; 
-var translateMaxYExtent = height;
+    centerLon  	= 52.2,
+    scaleMinExtent = 1, // = default scale
+    scaleMaxExtent = 8;
 
 // Append svg to body 
 var svg = d3.select("#d3-map")
@@ -27,20 +24,15 @@ var projection = d3.geoMercator()
 var path = d3.geoPath()
     .projection(projection)
 
-var centered;
-function getMyCentroid(element) {
-    var bbox = d3.select(element).node();
-    return [bbox.x, bbox.y];
-}
+// handle zooming into an area that has been clicked, with reset (reset zoom to initial default scale)
 var active = d3.select(null);
 function reset() {
     active = d3.select(null);
   
     svg.transition()
       .duration(750)
-      // .call( zoom.transform, d3.zoomIdentity.translate(0, 0).scale(1) ); // not in d3 v4
       .call(zoom.transform, d3.zoomIdentity); // updated for d3 v4
-  }
+}
 var mouseclicked = function(d) {  
     if (active.node() === this) return reset();
     active = d3.select(this).classed("active", true);
@@ -66,7 +58,7 @@ var zoomFunction = function() {
 // call it on svg so that the zoom funcionality is used on the map.
 var zoom = d3.zoom()
     .scaleExtent([scaleMinExtent, scaleMaxExtent])
-    .translateExtent([[0, 0], [translateMaxXExtent, translateMaxYExtent]])
+    .translateExtent([[0, 0], [width, height]])
     .on("zoom", zoomFunction);
 svg.call(zoom);
 
@@ -81,20 +73,20 @@ d3.json("../data/nl.json", function(error, json) {
         .on("click", mouseclicked)
         .on("mouseover", mouseover)
         .on("mouseleave", mouseleave)
-}
-  
-//   ).then(
-//     (json) => {
-        
-//     }
-);
+});
 
 var mouseover = function() {
-    d3.select(this).transition().style("fill", "blue");
+    d3.select(this)
+    .transition(0)
+    .style("stroke", "blue")
+    .style("stroke-width", "4");
 }
 
 var mouseleave = function() {
-    d3.select(this).transition().style("fill", "grey");
+    d3.select(this)
+    .transition(0)
+    .style("stroke", "black")
+    .style("stroke-width", "1");
 }
 
 
