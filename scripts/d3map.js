@@ -32,29 +32,34 @@ function getMyCentroid(element) {
     var bbox = d3.select(element).node();
     return [bbox.x, bbox.y];
 }
-var mouseclicked = function(d) {  
-    var x = 0,
-      y = 0;
-
-  // If the click was on the centered state or the background, re-center.
-  // Otherwise, center the clicked-on state.
-  if (!d || centered === d) {
-    centered = null;
-  } else {
-    var centroid = getMyCentroid(d);
-    x = width / 2 - centroid[0];
-    y = height / 2 - centroid[1];
-    centered = d;
-  }
-
-  // Transition to the new transform.
-  g.transition()
+var active = d3.select(null);
+function reset() {
+    active = d3.select(null);
+  
+    svg.transition()
       .duration(750)
-      .attr("transform", "translate(" + x + "," + y + ")");
+      // .call( zoom.transform, d3.zoomIdentity.translate(0, 0).scale(1) ); // not in d3 v4
+      .call(zoom.transform, d3.zoomIdentity); // updated for d3 v4
+  }
+var mouseclicked = function(d) {  
+    if (active.node() === this) return reset();
+    active = d3.select(this).classed("active", true);
+
+    var bounds = path.bounds(d),
+        dx = bounds[1][0] - bounds[0][0],
+        dy = bounds[1][1] - bounds[0][1],
+        x = (bounds[0][0] + bounds[1][0]) / 2,
+        y = (bounds[0][1] + bounds[1][1]) / 2,
+        scale = Math.max(1, Math.min(8, .9 / Math.max(dx / width, dy / height))),
+        translate = [width / 2 - scale * x, height / 2 - scale * y];
+
+    svg.transition()
+        .duration(750)
+        .call(zoom.transform, d3.zoomIdentity.translate(translate[0], translate[1]).scale(scale));
 }
 
-var zoomFunction = function(event) {
-    g.selectAll("path").attr("transform", event.transform);
+var zoomFunction = function() {
+    g.selectAll("path").attr("transform", d3.event.transform);
 }
 
 // create zoom funcionality for panning and zooming on the map.
@@ -66,9 +71,9 @@ var zoom = d3.zoom()
 svg.call(zoom);
 
 // Load the polygon data of the Netherlands and show it.
-d3.json("../data/nl.json").then(
-    (json) => {
-        g.selectAll("path")
+d3.json("../data/nl.json", function(error, json) {
+    if (error) throw error;
+    g.selectAll("path")
         .data(json.features)
         .enter()
         .append("path")
@@ -76,7 +81,12 @@ d3.json("../data/nl.json").then(
         .on("click", mouseclicked)
         .on("mouseover", mouseover)
         .on("mouseleave", mouseleave)
-    }
+}
+  
+//   ).then(
+//     (json) => {
+        
+//     }
 );
 
 var mouseover = function() {
