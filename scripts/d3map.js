@@ -58,5 +58,18 @@ d3.json("../data/nl.json").then(
         .append("path")
         .attr("d", path)
         .on("click", mouseclicked)
+        .on("mouseover", mouseover)
+        .on("mouseleave", mouseleave)
     }
 );
+
+var mouseover = function() {
+    d3.select(this).transition().style("fill", "blue");
+}
+
+var mouseleave = function() {
+    d3.select(this).transition().style("fill", "grey");
+}
+
+
+
