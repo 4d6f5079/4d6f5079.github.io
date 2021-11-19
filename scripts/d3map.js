@@ -27,8 +27,30 @@ var projection = d3.geoMercator()
 var path = d3.geoPath()
     .projection(projection)
 
-var mouseclicked = function(event) {
-    return; // TODO: zoom in to the place where the cursor is 
+var centered;
+function getMyCentroid(element) {
+    var bbox = d3.select(element).node();
+    return [bbox.x, bbox.y];
+}
+var mouseclicked = function(d) {  
+    var x = 0,
+      y = 0;
+
+  // If the click was on the centered state or the background, re-center.
+  // Otherwise, center the clicked-on state.
+  if (!d || centered === d) {
+    centered = null;
+  } else {
+    var centroid = getMyCentroid(d);
+    x = width / 2 - centroid[0];
+    y = height / 2 - centroid[1];
+    centered = d;
+  }
+
+  // Transition to the new transform.
+  g.transition()
+      .duration(750)
+      .attr("transform", "translate(" + x + "," + y + ")");
 }
 
 var zoomFunction = function(event) {
