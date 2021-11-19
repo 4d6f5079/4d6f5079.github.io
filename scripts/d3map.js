@@ -7,8 +7,8 @@ var width		= 750,
 
 var scaleMinExtent = 1; // = default scale
 var scaleMaxExtent = 8; 
-var translateMaxXExtent = 650; 
-var translateMaxYExtent = 750;
+var translateMaxXExtent = width; 
+var translateMaxYExtent = height;
 
 // Append svg to body 
 var svg = d3.select("#d3-map")
@@ -32,13 +32,7 @@ var mouseclicked = function(event) {
 }
 
 var zoomFunction = function(event) {
-    if (Math.abs(event.transform.k - 1) < Number.EPSILON) {
-        event.transform.x = 0;
-        event.transform.y = 0;
-        g.selectAll("path").attr("transform", event.transform);
-    } else {
-        g.selectAll("path").attr("transform", event.transform);
-    }
+    g.selectAll("path").attr("transform", event.transform);
 }
 
 // create zoom funcionality for panning and zooming on the map.
