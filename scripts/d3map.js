@@ -11,7 +11,8 @@ var width		= 750,
 var svg = d3.select("#d3-map")
     .append("svg")
 	.attr("width", width)
-	.attr("height", height);
+	.attr("height", height)
+    .on("click", stopEventPropagation, true);
 var g = svg.append("g");
 
 // Adjust projection based on scale and center of the map 
@@ -52,6 +53,11 @@ var mouseclicked = function(d) {
 
 var zoomFunction = function() {
     g.selectAll("path").attr("transform", d3.event.transform);
+}
+
+// To prevent drag behavior when area is clicked.
+function stopEventPropagation() {
+    if (d3.event.defaultPrevented) d3.event.stopPropagation();
 }
 
 // create zoom funcionality for panning and zooming on the map.
