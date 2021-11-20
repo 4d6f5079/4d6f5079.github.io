@@ -12,7 +12,12 @@
   <body>
     <div id="d3-map"></div>
     <div id="d3-chart"></div>
-
+    <div>
+    <label for="CoVid-19-date">CoVid-19 date:</label>
+    <input type="date" id="myDate" name="covid-period"
+          value="2021-01-22"
+          min="2020-02-28" max="2021-11-18"></div>
+    <button onclick="updateDate()">Select Date</button>
     <script src="https://d3js.org/d3.v4.js"></script>
     <script src="scripts/d3map.js"></script>
     <!-- <script src="scripts/coronaData.js"></script> -->

@@ -7,6 +7,11 @@ var width		= 750,
     scaleMinExtent = 1, // = default scale
     scaleMaxExtent = 8;
 
+var myDate;
+function updateDate() {
+    myDate = document.getElementById("myDate").value;
+    console.log(myDate);
+}
 // Append svg to body 
 var svg = d3.select("#d3-map")
     .append("svg")
