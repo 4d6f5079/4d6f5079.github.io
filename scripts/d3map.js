@@ -82,14 +82,16 @@ d3.json("../data/nl.json", function(error, json) {
         .attr("properties", json.features.properties)
         .on("click", mouseclicked)
         .on("mouseover", mouseover)
-        .on("mouseleave", mouseleave)
+        .on("mouseleave", mouseleave);
 });
 
 var mouseover = function() {
     d3.select(this)
+        .append("svg:title")
+        .text(function(d) { return d.properties.areaName; })
         .transition(0)
         .style("stroke", "blue")
-        .style("stroke-width", "4");
+        .style("stroke-width", "0.5");
 }
 
 var mouseleave = function() {
