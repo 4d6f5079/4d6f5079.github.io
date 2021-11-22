@@ -88,6 +88,7 @@ var mouseover = function() {
 }
 
 var mouseleave = function() {
+    d3.selectAll("path title").remove()
     d3.select(this)
         .transition(0)
         .style("stroke", "black")
