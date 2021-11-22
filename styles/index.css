@@ -14,12 +14,12 @@ path {
   cursor: pointer;
 }
 
-/* (Optional) Apply a "closed-hand" cursor during drag operation.
+/* (Optional) Apply a "closed-hand" cursor during drag operation.*/
 .grabbable {
-  cursor: grabbing;
+  cursor: pointer;
   cursor: -moz-grabbing;
   cursor: -webkit-grabbing;
-} */
+} 
 
 .flex-container {
   display: flex;
