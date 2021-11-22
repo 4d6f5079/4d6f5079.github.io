@@ -14,6 +14,15 @@ path {
   cursor: pointer;
 }
 
+#div-container {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px 2em;
+}
+.div-container :first-child {
+  align-self: center;
+}
+
 /* (Optional) Apply a "closed-hand" cursor during drag operation.*/
 .grabbable {
   cursor: pointer;
@@ -21,7 +30,7 @@ path {
   cursor: -webkit-grabbing;
 } 
 
-.flex-container {
+/* .flex-container {
   display: flex;
 }
 
@@ -32,12 +41,5 @@ path {
 
 .flex-child:first-child {
   margin-right: 50%;
-}
+} */
 
-#map-div {
-  float: left;
-}
-
-#inputs-div {
-  float: right;
-}
