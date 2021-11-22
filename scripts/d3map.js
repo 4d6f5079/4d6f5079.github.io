@@ -39,19 +39,13 @@ function reset() {
       .duration(750)
       .call(zoom.transform, d3.zoomIdentity);
 }
-var mouseclicked = function(d) {  
+var mouseclicked = function(dataOfPath) {  
     if (active.node() === this) return reset();
     active = d3.select(this);
-    
-    // TODO: remove those when finished
-    console.log(d);
 
-    var bounds = path.bounds(d);
-    // var dx = bounds[1][0] - bounds[0][0];
-    // var dy = bounds[1][1] - bounds[0][1];
+    var bounds = path.bounds(dataOfPath);
     var x = (bounds[0][0] + bounds[1][0]) / 2;
     var y = (bounds[0][1] + bounds[1][1]) / 2;
-    // var scale = Math.max(1, Math.min(8, .9 / Math.max(dx / width, dy / height)));
     var translate = [width / 2 - clickZoomScale * x, height / 2 - clickZoomScale * y];
 
     svg.transition()
@@ -79,7 +73,6 @@ d3.json("../data/nl.json", function(error, json) {
         .enter()
         .append("path")
         .attr("d", path)
-        .attr("properties", json.features.properties)
         .on("click", mouseclicked)
         .on("mouseover", mouseover)
         .on("mouseleave", mouseleave)
