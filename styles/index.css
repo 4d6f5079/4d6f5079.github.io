@@ -13,3 +13,23 @@ path {
   stroke-width: 1;
   cursor: pointer;
 }
+
+/* (Optional) Apply a "closed-hand" cursor during drag operation.
+.grabbable {
+  cursor: grabbing;
+  cursor: -moz-grabbing;
+  cursor: -webkit-grabbing;
+} */
+
+.flex-container {
+  display: flex;
+}
+
+.flex-child {
+  flex: 1;
+  border: 2px solid rgb(255, 0, 0);
+}
+
+.flex-child:first-child {
+  margin-right: 50%;
+}

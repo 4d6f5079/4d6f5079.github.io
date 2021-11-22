@@ -10,22 +10,32 @@
   </head>
 
   <body>
-    <div id="d3-map"></div>
-    <!-- TODO: Add some more divs for other visualization types -->
-    <div>
-      <label for="CoVid-19-date">CoVid-19 date:</label>
-      <input
-        type="date"
-        id="myDate"
-        name="covid-period"
-        value="2021-01-22"
-        min="2020-02-28"
-        max="2021-11-18"
-      />
+    <div id="div-container">
+      <div class="flex-child">
+        <div id="d3-map" class="grabbable"></div>
+        <!-- TODO: Add some more divs for other visualization types -->
+      </div>
+      <!-- <hr class="divider"></hr> -->
+      <div class="flex-child">
+        <div>
+          <label for="CoVid-19-date">CoVid-19 date:</label>
+          <input
+            type="date"
+            id="myDate"
+            name="covid-period"
+            value="2021-01-22"
+            min="2020-02-28"
+            max="2021-11-18"
+          />
+        </div>
+        <button onclick="updateDate()">Select Date</button>
+      </div>
     </div>
-    <button onclick="updateDate()">Select Date</button>
+
+    <!-- d3 version 4.13.0 -->
     <script src="https://d3js.org/d3.v4.js"></script>
+    <script src="scripts/divBehaviour.js"></script>
     <script src="scripts/d3map.js"></script>
-    <!-- <script src="scripts/coronaData.js"></script> -->
+    <script src="scripts/coronaData.js"></script>
   </body>
 </html>
