@@ -12,17 +12,17 @@ if (!nljson || !covidCumulative || !covidPerDay) {
         covidCumulative = allData[1];
         
         // DO SOME PREPROCESSING ON ALL THE DATA.
-        covidFilteredByDate = covidCumulative.filter(obj => {
+        const covidFilteredByDate = covidCumulative.filter(obj => {
             objDate = new Date(obj.Date_of_report);
-            objDateString = new Date(d.getTime() - (d.getTimezoneOffset() * 60000 ))
+            objDateString = new Date(objDate.getTime() - (objDate.getTimezoneOffset() * 60000 ))
                 .toISOString()
                 .split("T")[0];
             return objDateString === selectedDate;
-        })
+        });
 
         // JOIN DATA WITH NL.JSON DATA
         data = {
-            "covidCumulativeDayData": covidCumulative,
+            "covidCumulativeDayData": covidFilteredByDate,
             "mapData": nljson
         };
 

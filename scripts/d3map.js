@@ -108,16 +108,38 @@ d3.helper.tooltip = function(accessor){
 function drawMap(data) {
     // Load the polygon data of the Netherlands and show it.
     g.selectAll("path")
-    .data([data])
+    .data(data.mapData.features)
     .enter()
     .append("path")
     .attr("d", path)
     .on("click", mouseclicked)
+    .each(function(d) {
+        d3.select(this).selectAll("path")
+        .data(data.covidCumulativeDayData.filter(function(D) {
+            return D.Municipality_name == d.properties.areaName
+        }))
+        .enter()
+        .append("path")
+        .attr("Total_reported", function(D) {
+            return D.Total_reported
+        })
+        .attr("Hospital_admission", function(D) {
+            return D.Hospital_admission
+        })
+        .attr("Deceased", function(D) {
+            console.log(D.Deceased)
+            return D.Deceased
+        })
+        // Tot hier klopt het wel. TODO: Figure out how to get covid attributes in the tooltip call below.
+    })
     .call(d3.helper.tooltip(
         function(d) {
-            return "<b>"+d.properties.areaName + "</b>";
+            return "<b>"+ d.properties.areaName + "</b>"
+             + "\nTotal_reported: " + d.Total_reported + "\nHospital_admission: " + d.Hospital_admission
+             + "\nDeceased: " + d.Deceased;
         }
     ));
 }
+
 
 
