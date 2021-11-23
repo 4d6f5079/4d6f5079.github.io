@@ -10,13 +10,14 @@
   </head>
 
   <body>
-    <div id="div-container"> <!-- Top and Bottom -->
+    <div id="div-container">
+      <!-- Top and Bottom -->
       <div id="inputs-div">
         <div>
           <label for="CoVid-19-date">CoVid-19 date:</label>
           <input
             type="date"
-            id="myDate"
+            id="selectedDate"
             name="covid-period"
             value="2021-01-22"
             min="2020-02-28"
@@ -24,6 +25,9 @@
           />
         </div>
         <button onclick="updateDate()">Select Date</button>
+        <button id="toggleAreaButton" onclick="toggleRegionArea()">
+          Show Municipality Mode
+        </button>
       </div>
       <div id="map-div">
         <div id="d3-map" class="grabbable"></div>
@@ -32,8 +36,10 @@
     </div>
 
     <!-- d3 version 4.13.0 -->
-    <script src="https://d3js.org/d3.v4.js"></script>
+    <script src="https://d3js.org/d3.v5.js"></script>
+    <script src="/scripts/inputConstants.js"></script>
     <script src="scripts/d3map.js"></script>
     <script src="scripts/coronaData.js"></script>
+    <script src="/scripts/divProperties.js"></script>
   </body>
 </html>
