@@ -1,15 +1,30 @@
 function updateDate() {
+    if (!municipalitiesJson && !provinceJson && !covidCumulative) return;
+
     selectedDate = document.getElementById("selectedDate").value;
-    console.log(selectedDate);
+
+    let data;
+    if (municipalityMode) {
+        data = joinMapCovidCumulativeData(municipalitiesJson, covidCumulative);
+    } else {
+        data = joinMapCovidCumulativeData(provinceJson, covidCumulative);
+    }
+    drawMap(data);
 }
 
 function toggleRegionArea() {
-    console.log(municipalityMode)
+    if (!municipalitiesJson && !provinceJson && !covidCumulative) return;
+    
+    municipalityMode = !municipalityMode;
+
+    let data;
     if (municipalityMode) {
         document.getElementById("toggleAreaButton").innerHTML = "Show Province Mode";
-        municipalityMode = !municipalityMode;
+        data = joinMapCovidCumulativeData(municipalitiesJson, covidCumulative);
     } else {
         document.getElementById("toggleAreaButton").innerHTML = "Show Municipality Mode";
-        municipalityMode = !municipalityMode;
+        data = joinMapCovidCumulativeData(provinceJson, covidCumulative);
     }
+
+    drawMap(data);
 }

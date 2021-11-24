@@ -1,30 +1,28 @@
-var nljson;
+var municipalitiesJson;
 var covidCumulative;
-var data;
+var provinceJson;
 
-if (!nljson || !covidCumulative || !covidPerDay) {
+if (!municipalitiesJson || !covidCumulative || !provinceJson) {
     Promise.all([
-        d3.json("../data/nl.json"),
+        d3.json("../data/municipalities.json"),
+        d3.json("../data/province.json"),
         d3.dsv(";", "../data/COVID-19_aantallen_gemeente_cumulatief.csv")
     ]).then(function(allData) {
-        // ASSIGN VARS TO CORRESPONDING DATA.
-        nljson = allData[0];
-        covidCumulative = allData[1];
-        
-        // DO SOME PREPROCESSING ON ALL THE DATA.
-        covidFilteredByDate = covidCumulative.filter(obj => {
-            objDate = new Date(obj.Date_of_report);
-            objDateString = new Date(d.getTime() - (d.getTimezoneOffset() * 60000 ))
-                .toISOString()
-                .split("T")[0];
-            return objDateString === selectedDate;
-        })
 
-        // JOIN DATA WITH NL.JSON DATA
-        data = {
-            "covidCumulativeDayData": covidCumulative,
-            "mapData": nljson
-        };
+        // ASSIGN VARS TO CORRESPONDING DATA.
+        municipalitiesJson = allData[0];
+        provinceJson = allData[1];
+        covidCumulative = allData[2];
+        
+        const dateOfReport = new Date(covidCumulative[0].Date_of_report);
+        document.getElementById("selectedDate").min = extractDateOnly(dateOfReport);
+
+        let data;
+        if (municipalityMode) {
+            data = joinMapCovidCumulativeData(municipalitiesJson, covidCumulative);
+        } else {
+            data = joinMapCovidCumulativeData(provinceJson, covidCumulative);
+        }
 
         // CALL FUNCTION TO DRAW THE MAP
         drawMap(data);

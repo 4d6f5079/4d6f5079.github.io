@@ -14,7 +14,7 @@ const svg = d3.select("#d3-map")
 	.attr("height", height);
 
 // Append svg to body 
-const g = svg.append("g");
+// let g = svg.append("g");
 
 // Adjust projection based on scale and center of the map 
 const projection = d3.geoMercator()
@@ -50,7 +50,7 @@ function mouseclicked(dataOfPath) {
 }
 
 function zoomFunction() {
-    g.attr("transform", d3.event.transform);
+    d3.select("g").attr("transform", d3.event.transform);
 }
 
 // create zoom funcionality for panning and zooming on the map.
@@ -105,17 +105,87 @@ d3.helper.tooltip = function(accessor){
     };
 };
 
+function extractDateOnly(dateFormat) {
+    return (new Date(dateFormat.getTime() - (dateFormat.getTimezoneOffset() * 60000 ))
+        .toISOString()
+        .split("T")[0]);
+}
+
+function joinMapCovidCumulativeData(mapData, covidData) {
+    // DO SOME PREPROCESSING ON ALL THE DATA.
+    const covidFilteredByDate = covidData.filter(obj => {
+        if (municipalityMode) {
+            if (obj.Municipality_code === '') return false;
+        } else {
+            if (obj.Municipality_code !== '') return false;
+        }
+        
+        const objDate = new Date(obj.Date_of_report);
+        const objDateString = extractDateOnly(objDate);
+        return objDateString === selectedDate;
+    });
+
+    // JOIN DATA WITH NL.JSON DATA
+    return mapData.features.map(e => {
+        let placeObjRow;
+
+        if (municipalityMode) {
+            placeObjRow = covidFilteredByDate.filter(elem => {
+                return e.properties.areaName === elem.Municipality_name;
+            });
+        } else {
+            placeObjRow = covidFilteredByDate.filter(elem => {
+                return e.properties.name === elem.Province;
+            });   
+        }
+
+        const newProps = Object.assign(e.properties, placeObjRow); 
+        e.properties = newProps;
+        return e;
+    });
+}
+
 function drawMap(data) {
+    if (d3.select("g")) d3.select("g").remove();
+
     // Load the polygon data of the Netherlands and show it.
+    g = svg.append("g");
+
     g.selectAll("path")
-    .data([data])
+    .data(data)
     .enter()
     .append("path")
     .attr("d", path)
+    .style("fill", function(d) {
+        const covidD = d.properties["0"];
+        if (covidD !== undefined) {
+            const totalReported = +covidD.Total_reported;
+            if (totalReported === 0) {
+                return "grey";
+            } else if (500 <= totalReported < 1000) {
+                return "orange";
+            } else if (1000 <= totalReported < 1500) {
+                return "blue";
+            } else {
+                return "red";
+            }
+        } else {
+            return "grey";
+        }
+    })
     .on("click", mouseclicked)
     .call(d3.helper.tooltip(
         function(d) {
-            return "<b>"+d.properties.areaName + "</b>";
+            return "<b>"+ (municipalityMode ? d.properties.areaName : d.properties.name)  + "</b>" 
+            + (
+                (d.properties["0"] !== undefined) 
+                ? (
+                    "\nTotal_reported: " + d.properties["0"].Total_reported 
+                    + "\nHospital_admission: " + d.properties["0"].Hospital_admission
+                    + "\nDeceased: " + d.properties["0"].Deceased
+                  ) 
+                : ""
+            );
         }
     ));
 }
