@@ -168,15 +168,19 @@ function drawMap(data) {
         const covidD = d.properties["0"];
         if (covidD !== undefined) {
             const totalReported = +covidD.Total_reported;
-            if (totalReported === 0) {
+            console.log(totalReported)
+            if (0 <= totalReported && totalReported <= 500) {
                 return "grey";
-            } else if (500 <= totalReported < 1000) {
+            } 
+            if (500 < totalReported && totalReported <= 1000) {
                 return "orange";
-            } else if (1000 <= totalReported < 1500) {
+            } 
+            if (1000 < totalReported && totalReported <= 1500) {
                 return "blue";
-            } else {
+            } 
+            else {
                 return "red";
-            }
+            } 
         } else {
             return "grey";
         }
