@@ -188,9 +188,9 @@ function drawMap(data) {
             + (
                 (d.properties["0"] !== undefined) 
                 ? (
-                    "\nTotal_reported: " + d.properties["0"].Total_reported 
-                    + "\nHospital_admission: " + d.properties["0"].Hospital_admission
-                    + "\nDeceased: " + d.properties["0"].Deceased
+                    "<br\/>Total_reported: " + d.properties["0"].Total_reported 
+                    + "<br\/>Hospital_admission: " + d.properties["0"].Hospital_admission
+                    + "<br\/>Deceased: " + d.properties["0"].Deceased
                   ) 
                 : ""
             );
