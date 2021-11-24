@@ -111,6 +111,14 @@ function extractDateOnly(dateFormat) {
         .split("T")[0]);
 }
 
+function municipalityCheck() {
+    if (municipalityMode) {
+        return joinMapCovidCumulativeData(municipalitiesJson, covidCumulative);
+    } else {
+        return joinMapCovidCumulativeData(provinceJson, covidCumulative);
+    }
+}
+
 function joinMapCovidCumulativeData(mapData, covidData) {
     // DO SOME PREPROCESSING ON ALL THE DATA.
     const covidFilteredByDate = covidData.filter(obj => {

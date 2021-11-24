@@ -17,22 +17,9 @@ if (!municipalitiesJson || !covidCumulative || !provinceJson) {
         const dateOfReport = new Date(covidCumulative[0].Date_of_report);
         document.getElementById("selectedDate").min = extractDateOnly(dateOfReport);
 
-        let data;
-        if (municipalityMode) {
-            data = joinMapCovidCumulativeData(municipalitiesJson, covidCumulative);
-        } else {
-            data = joinMapCovidCumulativeData(provinceJson, covidCumulative);
-        }
+        const data = municipalityCheck();
 
         // CALL FUNCTION TO DRAW THE MAP
         drawMap(data);
     });
 }
-//  else {
-//   // UPDATE DATA AND REDRAW THE MAP USING THE VARS
-//   //e.g. 
-//   updatedData = data.filter(obj => obj.Deceased > 100);
-//   drawMap(updatedData, svgToDrawMapWithDataOn);
-//   // ALTERNATIVE: if we only want to draw on the same svg (svf og map), no need to pass the svg. just use map svg in the function itself.
-//   drawMap(data);
-// }
