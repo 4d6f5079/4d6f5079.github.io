@@ -207,22 +207,15 @@ function fillLocations(d) {
         const category = (selectedCategory === "Covid-19 Infections") ? 
         +covidD.Total_reported : (selectedCategory === "Hospital Admissions") ?
         +covidD.Hospital_admission : +covidD.Deceased
-
         if (0 <= category && category <= ranges[0]) {
             return colors[0];
         } 
-        if (ranges[0] < category && category <= ranges[1]) {
-            return colors[1];
-        } 
-        if (ranges[1] < category && category <= ranges[2]) {
-            return colors[2];
+        for (let i = 1; i < ranges.length; i++) {
+            if (ranges[i-1] < category && category <= ranges[i]) {
+                return colors[i];
+            }
         }
-        if (ranges[2] < category && category <= ranges[3]) {
-            return colors[3];
-        } 
-        else {
-            return colors[4];
-        } 
+        return colors[colors.length - 1];
     } else {
         return "grey";
     }
@@ -251,9 +244,9 @@ function drawMap(data) {
             + (
                 (d.properties[covidObjectKey] !== undefined) 
                 ? (
-                    "<br\/>Total_reported: " + d.properties[covidObjectKey].Total_reported 
-                    + "<br\/>Hospital_admission: " + d.properties[covidObjectKey].Hospital_admission
-                    + "<br\/>Deceased: " + d.properties[covidObjectKey].Deceased
+                    (selectedCategory === "Covid-19 Infections") ? "<br\/>Total_reported: " + d.properties[covidObjectKey].Total_reported 
+                     : (selectedCategory === "Hospital Admissions") ? "<br\/>Hospital_admission: " + d.properties[covidObjectKey].Hospital_admission
+                    : "<br\/>Deceased: " + d.properties[covidObjectKey].Deceased
                   ) 
                 : ""
             );
