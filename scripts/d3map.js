@@ -34,7 +34,7 @@ const projection = d3.geoMercator()
     .translate([ width/2, height/2 ])
 
 // parsing date
-const formatDate = d3.timeFormat("%Y-%m-%d")
+const formatDate = d3.timeFormat("%Y-%m-%d");
 
 // calculate geo path to be used for d tag in svg 
 const path = d3.geoPath()
@@ -76,7 +76,6 @@ function initLegend() {
     });
 }
 // handle zooming into an area that has been clicked, with reset (reset zoom to initial default scale)
-let active = d3.select(null);
 function reset() {
     active = d3.select(null);
 
@@ -87,6 +86,8 @@ function reset() {
 function mouseclicked(dataOfPath) {  
     if (active.node() === this) return reset();
     active = d3.select(this);
+    
+    d3.event.stopPropagation();
 
     var bounds = path.bounds(dataOfPath);
     var x = (bounds[0][0] + bounds[1][0]) / 2;
@@ -99,7 +100,7 @@ function mouseclicked(dataOfPath) {
 }
 
 function zoomFunction() {
-    d3.select("g").attr("transform", d3.event.transform);
+    d3.select(`#${gElemId}`).attr("transform", d3.event.transform);
 }
 
 // create zoom funcionality for panning and zooming on the map.
@@ -114,8 +115,8 @@ d3.helper = {};
 
 d3.helper.tooltip = function(accessor){
     return function(selection){
-        var tooltipDiv;
-        var bodyNode = d3.select('body').node();
+        const tooltipDiv;
+        const bodyNode = d3.select('body').node();
 
         selection.on("mouseover", function(d, i){
             d3.select(this)
@@ -153,12 +154,6 @@ d3.helper.tooltip = function(accessor){
         });
     };
 };
-
-function extractDateOnly(dateFormat) {
-    return (new Date(dateFormat.getTime() - (dateFormat.getTimezoneOffset() * 60000 ))
-        .toISOString()
-        .split("T")[0]);
-}
 
 function municipalityCheck() {
     if (municipalityMode) {
