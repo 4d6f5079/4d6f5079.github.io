@@ -6,7 +6,7 @@ const centerLat	= 5.5;
 const centerLon  	= 52.2;
 const scaleMinExtent = 1; // default scale
 const scaleMaxExtent = 8;
-const clickZoomScale = 5; // the scale to zoom to when region on the map is clicked
+const clickZoomScale = 3.2; // the scale to zoom to when region on the map is clicked
 const covidObjectKey = "covidObjectData";
 const gElemId = "gmap";
 const mapDivId = "d3-map";
@@ -115,7 +115,7 @@ d3.helper = {};
 
 d3.helper.tooltip = function(accessor){
     return function(selection){
-        const tooltipDiv;
+        let tooltipDiv;
         const bodyNode = d3.select('body').node();
 
         selection.on("mouseover", function(d, i){
@@ -129,7 +129,7 @@ d3.helper.tooltip = function(accessor){
 
             // Append tooltip
             tooltipDiv = d3.select('body').append('div').attr('class', 'tooltip');
-            var absoluteMousePos = d3.mouse(bodyNode);
+            const absoluteMousePos = d3.mouse(bodyNode);
             tooltipDiv.style('left', (absoluteMousePos[0] + 10)+'px')
                 .style('top', (absoluteMousePos[1] - 15)+'px')
                 .style('position', 'absolute') 
@@ -137,10 +137,10 @@ d3.helper.tooltip = function(accessor){
         })
         .on('mousemove', function(d, i) {
             // Move tooltip
-            var absoluteMousePos = d3.mouse(bodyNode);
+            const absoluteMousePos = d3.mouse(bodyNode);
             tooltipDiv.style('left', (absoluteMousePos[0] + 10)+'px')
                 .style('top', (absoluteMousePos[1] - 15)+'px');
-            var tooltipText = accessor(d, i) || '';
+            const tooltipText = accessor(d, i) || '';
             tooltipDiv.html(tooltipText);
         })
         .on("mouseout", function(d, i) {
@@ -182,8 +182,8 @@ function joinMapCovidCumulativeData(mapData, covidData) {
 
         if (municipalityMode) {
             placeObjRow = covidFilteredByDate.filter(elem => {
-                return e.properties.areaName.normalize('NFD').replace(/[\u0300-\u036f]/g, "") === 
-                    elem.Municipality_name.normalize('NFD').replace(/[\u0300-\u036f]/g, ""); // remove accents from words
+                return e.properties.areaName=== 
+                    elem.Municipality_name;
             });
         } else {
             placeObjRow = covidFilteredByDate.filter(elem => {
@@ -225,13 +225,12 @@ function drawMap(data) {
     if (d3.select("svg.legend")) d3.select("svg.legend").remove();
 
     initLegend();
-
+    
     // Load the polygon data of the Netherlands and show it.
     g = svg.append("g")
     .attr("id", gElemId)
     .attr("transform", d3.zoomIdentity);
 
-    
     g.selectAll("path")
     .data(data)
     .enter()
