@@ -13,13 +13,18 @@ if (!municipalitiesJson || !covidCumulative || !provinceJson) {
         municipalitiesJson = allData[0];
         provinceJson = allData[1];
         covidCumulative = allData[2];
+
+        console.log("Cumulutative data: ", covidCumulative);
+        console.log("Cumulutative data: ", covidCumulative[0]);
         
         const dateOfReport = new Date(covidCumulative[0].Date_of_report);
+        // console.log("Date of report: ", extractDateOnly(dateOfReport));
         document.getElementById("selectedDate").min = extractDateOnly(dateOfReport);
 
         const data = municipalityCheck();
 
         // CALL FUNCTION TO DRAW THE MAP
         drawMap(data);
+        drawLineChart();
     });
 }

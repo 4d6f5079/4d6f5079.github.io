@@ -35,9 +35,15 @@ function reset() {
     .duration(750)
     .call(zoom.transform, d3.zoomIdentity);
 }
+
+var selectedPlace;
 function mouseclicked(dataOfPath) {  
     if (active.node() === this) return reset();
     active = d3.select(this);
+
+    // selectedPlace = d.properties.areaName;
+    // console.log("Selected place:", selectdPlace);
+    //updateCumulativeBarchart(selectedPlace);
 
     var bounds = path.bounds(dataOfPath);
     var x = (bounds[0][0] + bounds[1][0]) / 2;

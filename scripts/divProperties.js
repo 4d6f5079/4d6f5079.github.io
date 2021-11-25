@@ -22,4 +22,5 @@ function toggleRegionArea() {
     const data = municipalityCheck();
 
     drawMap(data);
+    // clear line chart
 }
