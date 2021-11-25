@@ -11,9 +11,10 @@ const covidObjectKey = "covidObjectData";
 const gElemId = "gmap";
 const mapDivId = "d3-map";
 
-const total_reported_colors = ["#c7bc7b","#cacc43","#dfb236","#e2860e","#e25c0e"]
-const hospital_admission_colors = ["#9dd1cd", "#5ecbfd", "#08a9e9", "#3d78f5", "#3f35d1"]
-const deceased_colors = ["#9dd1a0", "#77f897", "#42f03c", "#22b61d", "#054b0b"]
+// For the colors, the first value is the unknown color and the remaining n colors are linked with n-1 ranges. 
+const total_reported_colors = ["grey", "#c7bc7b","#cacc43","#dfb236","#e2860e","#e25c0e"]
+const hospital_admission_colors = ["grey", "#9dd1cd", "#5ecbfd", "#08a9e9", "#3d78f5", "#3f35d1"]
+const deceased_colors = ["grey", "#9dd1a0", "#77f897", "#42f03c", "#22b61d", "#054b0b"]
 const total_reported_ranges = [500,1000,1500,2000]
 const hospital_admission_ranges = [250,500,750,1000]
 const deceased_ranges = [100,200,300,400]
@@ -68,11 +69,10 @@ function initLegend() {
     .attr("x", 24)
     .attr("y", 9)
     .attr("dy", ".35em")
-    .text(function(d) { 
-            return (d === colors[0]) ? `0-${ranges[0]}`:
-            (d === colors[1]) ? `${ranges[0]}-${ranges[1]}` :
-            (d === colors[2]) ? `${ranges[1]}-${ranges[2]}` :
-            (d === colors[3]) ? `${ranges[2]}-${ranges[3]}` : `${ranges[3]}+`;
+    .text(function(d, i) { 
+            return (i === 0) ? `Unknown` : (i === 1) ? `0-${ranges[0]}`:
+            (i > 1 && i < colors.length - 1) ? `${ranges[i-2]}-${ranges[i-1]}` :
+            `${ranges[ranges.length - 1]}+`;
     });
 }
 // handle zooming into an area that has been clicked, with reset (reset zoom to initial default scale)
@@ -207,16 +207,16 @@ function fillLocations(d) {
         +covidD.Total_reported : (selectedCategory === "Hospital Admissions") ?
         +covidD.Hospital_admission : +covidD.Deceased
         if (0 <= category && category <= ranges[0]) {
-            return colors[0];
+            return colors[1];
         } 
         for (let i = 1; i < ranges.length; i++) {
             if (ranges[i-1] < category && category <= ranges[i]) {
-                return colors[i];
+                return colors[i+1];
             }
         }
         return colors[colors.length - 1];
     } else {
-        return "grey";
+        return colors[0];
     }
 }
 
