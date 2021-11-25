@@ -7,6 +7,7 @@ const centerLon  	= 52.2;
 const scaleMinExtent = 1; // default scale
 const scaleMaxExtent = 8;
 const clickZoomScale = 5; // the scale to zoom to when region on the map is clicked
+const covidObjectKey = "covidObjectData";
 
 const svg = d3.select("#d3-map")
     .append("svg")
@@ -139,7 +140,8 @@ function joinMapCovidCumulativeData(mapData, covidData) {
 
         if (municipalityMode) {
             placeObjRow = covidFilteredByDate.filter(elem => {
-                return e.properties.areaName === elem.Municipality_name;
+                return e.properties.areaName === 
+                    elem.Municipality_name.normalize('NFD').replace(/[\u0300-\u036f]/g, ""); // remove accents from words
             });
         } else {
             placeObjRow = covidFilteredByDate.filter(elem => {
@@ -147,8 +149,11 @@ function joinMapCovidCumulativeData(mapData, covidData) {
             });   
         }
 
-        const newProps = Object.assign(e.properties, placeObjRow); 
-        e.properties = newProps;
+        if (placeObjRow.length > 1) {
+            return console.error(`Encountered multiple values while filtering for ${e.properties.areaName}. Result: ${placeObjRow}`);
+        } 
+
+        e.properties[covidObjectKey] = placeObjRow[0];
         return e;
     });
 }
@@ -157,7 +162,7 @@ function drawMap(data) {
     if (d3.select("g")) d3.select("g").remove();
 
     // Load the polygon data of the Netherlands and show it.
-    g = svg.append("g");
+    g = svg.append("g").attr("transform", d3.zoomIdentity);
 
     g.selectAll("path")
     .data(data)
@@ -165,12 +170,11 @@ function drawMap(data) {
     .append("path")
     .attr("d", path)
     .style("fill", function(d) {
-        const covidD = d.properties["0"];
+        const covidD = d.properties[covidObjectKey];
         if (covidD !== undefined) {
             const totalReported = +covidD.Total_reported;
-            console.log(totalReported)
-            if (0 <= totalReported && totalReported <= 500) {
-                return "grey";
+            if (totalReported <= 500) {
+                return "brown";
             } 
             if (500 < totalReported && totalReported <= 1000) {
                 return "orange";
@@ -190,11 +194,11 @@ function drawMap(data) {
         function(d) {
             return "<b>"+ (municipalityMode ? d.properties.areaName : d.properties.name)  + "</b>" 
             + (
-                (d.properties["0"] !== undefined) 
+                (d.properties[covidObjectKey] !== undefined) 
                 ? (
-                    "<br\/>Total_reported: " + d.properties["0"].Total_reported 
-                    + "<br\/>Hospital_admission: " + d.properties["0"].Hospital_admission
-                    + "<br\/>Deceased: " + d.properties["0"].Deceased
+                    "<br\/>Total_reported: " + d.properties[covidObjectKey].Total_reported 
+                    + "<br\/>Hospital_admission: " + d.properties[covidObjectKey].Hospital_admission
+                    + "<br\/>Deceased: " + d.properties[covidObjectKey].Deceased
                   ) 
                 : ""
             );
