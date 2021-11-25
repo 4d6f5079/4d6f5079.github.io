@@ -28,9 +28,21 @@
         <button id="toggleAreaButton" onclick="toggleRegionArea()">
           Show Province Mode
         </button>
+        <select name="covid-category" id="covid-category" onchange="updateCategory();">
+          <option value="Covid-19 Infections">Covid-19 Infections</option>
+          <option value="Hospital Admissions">Hospital Admissions</option>
+          <option value="Deceased">Deceased</option>
+        </select>
       </div>
       <div id="map-div">
-        <div id="d3-map" class="grabbable"></div>
+        <div id="d3-map" class="grabbable">
+          <!-- <svg width="100" height="150">
+            <rect x="0" width="15" fill="#d1c9b8"></rect>
+            <rect x="25" width="15" fill="#d1c9b8"></rect>
+            <rect x="50" width="15" fill="#d1c9b8"></rect>
+            <rect x="75" width="15" fill="#d1c9b8"></rect>
+          </svg> -->
+        </div>
         <!-- TODO: Add some more divs for other visualization types -->
       </div>
     </div>

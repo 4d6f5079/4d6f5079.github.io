@@ -8,6 +8,15 @@ function updateDate() {
     drawMap(data);
 }
 
+function updateCategory() {
+    if (!municipalitiesJson && !provinceJson && !covidCumulative) return;
+    selectedCategory = document.getElementById("covid-category").value;
+
+    const data = municipalityCheck();
+
+    drawMap(data);
+}
+
 function toggleRegionArea() {
     if (!municipalitiesJson && !provinceJson && !covidCumulative) return;
     
