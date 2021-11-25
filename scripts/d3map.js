@@ -8,28 +8,33 @@ const scaleMinExtent = 1; // default scale
 const scaleMaxExtent = 8;
 const clickZoomScale = 5; // the scale to zoom to when region on the map is clicked
 const covidObjectKey = "covidObjectData";
+const gElemId = "gmap";
+const mapDivId = "d3-map";
 
 const total_reported_colors = ["#c7bc7b","#cacc43","#dfb236","#e2860e","#e25c0e"]
 const hospital_admission_colors = ["#9dd1cd", "#5ecbfd", "#08a9e9", "#3d78f5", "#3f35d1"]
 const deceased_colors = ["#9dd1a0", "#77f897", "#42f03c", "#22b61d", "#054b0b"]
-let colors = total_reported_colors
-
 const total_reported_ranges = [500,1000,1500,2000]
 const hospital_admission_ranges = [250,500,750,1000]
 const deceased_ranges = [100,200,300,400]
-let ranges = total_reported_ranges
 
-const svg = d3.select("#d3-map")
+let colors = total_reported_colors
+let ranges = total_reported_ranges
+let active = d3.select(null); // used for zooming and reset zoom 
+
+const svg = d3.select(`#${mapDivId}`)
     .append("svg")
 	.attr("width", width)
 	.attr("height", height);
-// Append svg to body 
-// let g = svg.append("g");
+
 // Adjust projection based on scale and center of the map 
 const projection = d3.geoMercator()
     .center([centerLat, centerLon])     // GPS of location to zoom on
     .scale(defaultScale)                       // This is like the zoom
     .translate([ width/2, height/2 ])
+
+// parsing date
+const formatDate = d3.timeFormat("%Y-%m-%d")
 
 // calculate geo path to be used for d tag in svg 
 const path = d3.geoPath()
@@ -172,8 +177,7 @@ function joinMapCovidCumulativeData(mapData, covidData) {
             if (obj.Municipality_code !== '') return false;
         }
         
-        const objDate = new Date(obj.Date_of_report);
-        const objDateString = extractDateOnly(objDate);
+        const objDateString = formatDate(new Date(obj.Date_of_report));
         return objDateString === selectedDate;
     });
 
@@ -222,15 +226,17 @@ function fillLocations(d) {
 }
 
 function drawMap(data) {
-
-    if (d3.select("g")) d3.select("g").remove();
+    if (d3.select(`#${gElemId}`)) d3.select(`#${gElemId}`).remove();
     if (d3.select("svg.legend")) d3.select("svg.legend").remove();
 
     initLegend();
 
     // Load the polygon data of the Netherlands and show it.
-    g = svg.append("g").attr("transform", d3.zoomIdentity);
+    g = svg.append("g")
+    .attr("id", gElemId)
+    .attr("transform", d3.zoomIdentity);
 
+    
     g.selectAll("path")
     .data(data)
     .enter()
