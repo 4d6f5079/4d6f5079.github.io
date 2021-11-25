@@ -8,14 +8,22 @@ const scaleMinExtent = 1; // default scale
 const scaleMaxExtent = 8;
 const clickZoomScale = 5; // the scale to zoom to when region on the map is clicked
 
+const total_reported_colors = ["#c7bc7b","#cacc43","#dfb236","#e2860e","#e25c0e"]
+const hospital_admission_colors = ["#9dd1cd", "#5ecbfd", "#08a9e9", "#3d78f5", "#3f35d1"]
+const deceased_colors = ["#9dd1a0", "#77f897", "#42f03c", "#22b61d", "#054b0b"]
+let colors = total_reported_colors
+
+const total_reported_ranges = [500,1000,1500,2000]
+const hospital_admission_ranges = [250,500,750,1000]
+const deceased_ranges = [100,200,300,400]
+let ranges = total_reported_ranges
+
 const svg = d3.select("#d3-map")
     .append("svg")
 	.attr("width", width)
 	.attr("height", height);
-
 // Append svg to body 
 // let g = svg.append("g");
-
 // Adjust projection based on scale and center of the map 
 const projection = d3.geoMercator()
     .center([centerLat, centerLon])     // GPS of location to zoom on
@@ -26,6 +34,43 @@ const projection = d3.geoMercator()
 const path = d3.geoPath()
     .projection(projection)
 
+function initLegend() {
+    colors = (selectedCategory === "Covid-19 Infections") ? 
+        total_reported_colors : (selectedCategory === "Hospital Admissions") ?
+        hospital_admission_colors : deceased_colors
+    ranges = (selectedCategory === "Covid-19 Infections") ? 
+    total_reported_ranges : (selectedCategory === "Hospital Admissions") ?
+    hospital_admission_ranges : deceased_ranges
+    const legend = d3.select("body").append('svg')
+    .attr('class', 'legend')
+    .attr('width', 148)
+    .attr('height', 148)
+    .selectAll('g')
+    .data(colors)
+    .enter().append('g')
+    .attr("transform", function(d, i) { 
+        console.log(i)
+        return "translate(0," + i * 20 + ")"; });
+    legend.append("rect")
+    //that's 18px wide
+    .attr("width", 18)
+    //and 18px high
+    .attr("height", 18)
+    //then fill it will the color assigned by the scale
+    .style("fill", function(d) {
+        return d;
+    });
+    legend.append("text")
+    .attr("x", 24)
+    .attr("y", 9)
+    .attr("dy", ".35em")
+    .text(function(d) { 
+            return (d === colors[0]) ? `0-${ranges[0]}`:
+            (d === colors[1]) ? `${ranges[0]}-${ranges[1]}` :
+            (d === colors[2]) ? `${ranges[1]}-${ranges[2]}` :
+            (d === colors[3]) ? `${ranges[2]}-${ranges[3]}` : `${ranges[3]}+`;
+    });
+}
 // handle zooming into an area that has been clicked, with reset (reset zoom to initial default scale)
 let active = d3.select(null);
 function reset() {
@@ -153,38 +198,46 @@ function joinMapCovidCumulativeData(mapData, covidData) {
     });
 }
 
-function drawMap(data) {
-    if (d3.select("g")) d3.select("g").remove();
+function fillLocations(d) {
+    const covidD = d.properties["0"];
+    if (covidD !== undefined) {
+        const category = (selectedCategory === "Covid-19 Infections") ? 
+        +covidD.Total_reported : (selectedCategory === "Hospital Admissions") ?
+        +covidD.Hospital_admission : +covidD.Deceased
 
+        if (0 <= category && category <= ranges[0]) {
+            return colors[0];
+        } 
+        if (ranges[0] < category && category <= ranges[1]) {
+            return colors[1];
+        } 
+        if (ranges[1] < category && category <= ranges[2]) {
+            return colors[2];
+        }
+        if (ranges[2] < category && category <= ranges[3]) {
+            return colors[3];
+        } 
+        else {
+            return colors[4];
+        } 
+    } else {
+        return "grey";
+    }
+}
+
+function drawMap(data) {
+
+    if (d3.select("g")) d3.select("g").remove();
+    if (d3.select("svg.legend")) d3.select("svg.legend").remove();
+    initLegend();
     // Load the polygon data of the Netherlands and show it.
     g = svg.append("g");
-
     g.selectAll("path")
     .data(data)
     .enter()
     .append("path")
     .attr("d", path)
-    .style("fill", function(d) {
-        const covidD = d.properties["0"];
-        if (covidD !== undefined) {
-            const totalReported = +covidD.Total_reported;
-            console.log(totalReported)
-            if (0 <= totalReported && totalReported <= 500) {
-                return "grey";
-            } 
-            if (500 < totalReported && totalReported <= 1000) {
-                return "orange";
-            } 
-            if (1000 < totalReported && totalReported <= 1500) {
-                return "blue";
-            } 
-            else {
-                return "red";
-            } 
-        } else {
-            return "grey";
-        }
-    })
+    .style("fill", fillLocations)
     .on("click", mouseclicked)
     .call(d3.helper.tooltip(
         function(d) {
