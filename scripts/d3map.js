@@ -51,7 +51,7 @@ function initLegend() {
         total_reported_ranges : (selectedCategory === "Hospital Admissions") ?
         hospital_admission_ranges : deceased_ranges;
 
-    const legend = d3.select("body").append('svg')
+    const legend = svg.append("g")
         .attr('class', 'legend')
         .attr('width', 148)
         .attr('height', 148)
@@ -291,14 +291,11 @@ function tooltipText(d) {
 function drawMap(data) {
     // Clean/reset the map and legend to add new data to it. 
     if (d3.select(`#${gElemId}`)) d3.select(`#${gElemId}`).remove();
-    if (d3.select(`svg${legendClass}`)) d3.select(`svg${legendClass}`).remove();
-
-    // initialize the legend for the map.
-    initLegend();
+    if (d3.select(`g${legendClass}`)) d3.select(`g${legendClass}`).remove();
     
     // Append the g element where the paths will be stored and reset zoom if active.
     if (zoomActive) reset(); 
-    
+
     g = svg.append("g")
     .attr("id", gElemId)
     .attr("transform", d3.zoomIdentity);
@@ -312,6 +309,9 @@ function drawMap(data) {
     .style("fill", fillLocations)
     .on("click", mouseclicked)
     .call(d3.helper.tooltip(tooltipText, true));
+
+    // initialize the legend for the map.
+    initLegend();
 }
 
 

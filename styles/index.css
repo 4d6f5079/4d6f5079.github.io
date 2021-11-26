@@ -24,28 +24,37 @@ path {
 }
 
 #div-container {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 10px 2em;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: space-evenly;
+  gap: 15px;
+  align-items: center;
+}
+
+#inputs-container {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  gap: 25px;
+  flex-flow: row wrap;
 }
 
 .axis {
   font: 14px sans-serif;
 }
 
-#d3-map {
+#map-container {
   float: left;
 }
 
-#horizontal-chart {
-  float: left;
+#horizontal-chart-container {
+  float: right;
 }
 
-.div-container :first-child {
-  align-self: center;
-}
-
-/* (Optional) Apply a "closed-hand" cursor during drag operation.*/
+/* Apply a "closed-hand" cursor during drag operation.*/
 .grabbable {
   cursor: pointer;
   cursor: -moz-grabbing;
