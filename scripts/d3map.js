@@ -119,16 +119,23 @@ const zoom = d3.zoom()
 svg.call(zoom);
 
 d3.helper = {};
-d3.helper.tooltip = function(accessor){
+d3.helper.tooltip = function(accessor, flag){
     return function(selection){
         let tooltipDiv;
         const bodyNode = d3.select('body').node();
 
         selection.on("mouseover", function(d, i){
-            d3.select(this)
-            .transition(0)
-            .style("stroke", "blue")
-            .style("stroke-width", "2");
+            if (flag) {
+                d3.select(this)
+                .transition(0)
+                .style("stroke", "blue")
+                .style("stroke-width", "2");
+            } else {
+                d3.select(this)
+                .transition(0)
+                .style("stroke", "purple")
+                .style("stroke-width", "2");
+            }
 
             // Clean up lost tooltips
             d3.select('body').selectAll('div.tooltip').remove();
@@ -151,10 +158,17 @@ d3.helper.tooltip = function(accessor){
         })
         .on("mouseout", function(d, i) {
             // Remove tooltip
-            d3.select(this)
-            .transition(0)
-            .style("stroke", "black")
-            .style("stroke-width", "1");
+            if (flag) {
+                d3.select(this)
+                .transition(0)
+                .style("stroke", "black")
+                .style("stroke-width", "1");
+            } else {
+                d3.select(this)
+                .transition(0)
+                .style("stroke", "transparent")
+                .style("stroke-width", "1");
+            }
             
             tooltipDiv.remove();
         });
@@ -297,26 +311,8 @@ function drawMap(data) {
     .attr("d", path)
     .style("fill", fillLocations)
     .on("click", mouseclicked)
-    .call(d3.helper.tooltip(tooltipText));
+    .call(d3.helper.tooltip(tooltipText, true));
 }
 
-function getMode(d) {
-    return municipalityMode ? d.properties.areaName : d.properties.name
-}
-function getCategory(covidD) {
-    return (selectedCategory === "Covid-19 Infections") ? 
-        +covidD.Total_reported : (selectedCategory === "Hospital Admissions") ?
-        +covidD.Hospital_admission : +covidD.Deceased;
-}
-
-function getCatWithUndefCheck(d) {
-    const covidD = d.properties[covidObjectKey]
-    if (covidD !== undefined) {
-        const category = getCategory(covidD);
-        return category;
-    } else {
-        return 0;
-    }
-}
 
 

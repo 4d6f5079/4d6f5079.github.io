@@ -1,10 +1,33 @@
+function getTitleText() {
+    const mode = municipalityMode ? "Municipalities" : "Provinces"
+    return `${mode} with descending ${selectedCategory}`;
+}
+function getMode(d) {
+    return municipalityMode ? d.properties.areaName : d.properties.name
+}
+function getCategory(covidD) {
+    return (selectedCategory === "Covid-19 Infections") ? 
+        +covidD.Total_reported : (selectedCategory === "Hospital Admissions") ?
+        +covidD.Hospital_admission : +covidD.Deceased;
+}
+
+function getCatWithUndefCheck(d) {
+    const covidD = d.properties[covidObjectKey]
+    if (covidD !== undefined) {
+        const category = getCategory(covidD);
+        return category;
+    } else {
+        return 0;
+    }
+}
+
 function drawChart(data) {
     if (d3.select("svg.chart")) d3.select("svg.chart").remove();
 
     // set the dimensions and margins of the graph
-    const margin = {top: 50, right: 30, bottom: 50, left: 150},
+    const margin = {top: 50, right: 30, bottom: 80, left: 150},
     width = 800 - margin.left - margin.right,
-    height = (municipalityMode ? 600 : 250) - margin.top - margin.bottom;
+    height = (municipalityMode ? 600 : 400) - margin.top - margin.bottom;
 
     // append the svg object to the body of the page
     const svg_chart = d3.select("#horizontal-chart")
@@ -22,6 +45,7 @@ function drawChart(data) {
     const max = d3.max(top30Data, function (d) { 
             return getCatWithUndefCheck(d)
         });
+
     // Add X axis
     const x = d3.scaleLinear()
     .domain([0, max])
@@ -32,7 +56,7 @@ function drawChart(data) {
     .attr("text-anchor", "middle")  
     .style("font-size", "30px") 
     .style("font-weight", "bold")  
-    .text("Locations sorted by top amount of cases");
+    .text(getTitleText());
     svg_chart.append("g")
     .attr("class", "axis")
     .attr("transform", "translate(0," + height + ")")
@@ -48,7 +72,7 @@ function drawChart(data) {
     .padding(.1);
     svg_chart.append("g")
     .attr("class", "axis")
-    .call(d3.axisLeft(y))
+    .call(d3.axisLeft(y))   
 
     const defs = svg_chart.append('defs');
     const bgGradient = defs
@@ -73,4 +97,7 @@ function drawChart(data) {
     .attr("width", function(d) { return x(getCatWithUndefCheck(d)); })
     .attr("height", y.bandwidth() )
     .attr("fill", "url(#bg-gradient)")
+    .call(d3.helper.tooltip(function(d) {
+        return getCatWithUndefCheck(d);
+    }, false))
 }
