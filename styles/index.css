@@ -43,11 +43,12 @@ path {
   gap: 10px 2em;
 }
 
+.axis { font: 14px sans-serif; }
 #d3-map {
   float:left; 
 }
 #horizontal-chart {
-  float: right;
+  float: left;
 }
 .div-container :first-child {
   align-self: center;
