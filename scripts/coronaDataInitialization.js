@@ -23,5 +23,6 @@ if (!municipalitiesJson || !covidCumulative || !provinceJson) {
 
         // CALL FUNCTION TO DRAW THE MAP
         drawMap(data);
+        drawChart(data);
     });
 }
