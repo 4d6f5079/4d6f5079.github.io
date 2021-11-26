@@ -20,4 +20,5 @@ Promise.all([
 
     // CALL FUNCTION TO DRAW THE MAP
     drawMap(data);
+    drawChart(data);
 });

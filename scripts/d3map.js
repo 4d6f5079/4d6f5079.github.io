@@ -246,9 +246,7 @@ function joinMapCovidCumulativeData(mapData, covidData) {
 function fillLocations(d) {
     const covidD = d.properties[covidObjectKey];
     if (covidD !== undefined) {
-        const category = (selectedCategory === "Covid-19 Infections") ? 
-        +covidD.Total_reported : (selectedCategory === "Hospital Admissions") ?
-        +covidD.Hospital_admission : +covidD.Deceased
+        const category = getCategory(covidD);
         if (0 <= category && category <= ranges[0]) {
             return colors[1];
         } 
@@ -302,5 +300,23 @@ function drawMap(data) {
     .call(d3.helper.tooltip(tooltipText));
 }
 
+function getMode(d) {
+    return municipalityMode ? d.properties.areaName : d.properties.name
+}
+function getCategory(covidD) {
+    return (selectedCategory === "Covid-19 Infections") ? 
+        +covidD.Total_reported : (selectedCategory === "Hospital Admissions") ?
+        +covidD.Hospital_admission : +covidD.Deceased;
+}
+
+function getCatWithUndefCheck(d) {
+    const covidD = d.properties[covidObjectKey]
+    if (covidD !== undefined) {
+        const category = getCategory(covidD);
+        return category;
+    } else {
+        return 0;
+    }
+}
 
 

@@ -5,6 +5,7 @@ function updateDate() {
     
     const data = municipalityCheck();
     drawMap(data);
+    drawChart(data);
 }
 
 function updateCategory() {
@@ -14,6 +15,7 @@ function updateCategory() {
 
     const data = municipalityCheck();
     drawMap(data);
+    drawChart(data);
 }
 
 function toggleRegionArea() {
@@ -29,4 +31,5 @@ function toggleRegionArea() {
     
     const data = municipalityCheck();
     drawMap(data);
+    drawChart(data);
 }
