@@ -6,10 +6,11 @@ const centerLat	= 5.5;
 const centerLon  	= 52.2;
 const scaleMinExtent = 1; // default scale
 const scaleMaxExtent = 8;
-const clickZoomScale = 3.2; // the scale to zoom to when region on the map is clicked
-const covidObjectKey = "covidObjectData";
+const clickZoomScale = 3.2; // Scale to zoom to (relative to defaultScale) when area on the map is clicked
+const covidObjectKey = "covidObjectData"; // the key used to access the covid data object in properties of each path element
 const gElemId = "gmap";
 const mapDivId = "d3-map";
+const legendClass = ".legend";
 
 // For the colors, the first value is the unknown color and the remaining n colors are linked with n-1 ranges. 
 const total_reported_colors = ["grey", "#c7bc7b","#cacc43","#dfb236","#e2860e","#e25c0e"]
@@ -21,7 +22,7 @@ const deceased_ranges = [100,200,300,400]
 
 let colors = total_reported_colors
 let ranges = total_reported_ranges
-let active = d3.select(null); // used for zooming and reset zoom 
+let zoomActive = d3.select(null); // used for zooming and reset zoom 
 
 const svg = d3.select(`#${mapDivId}`)
     .append("svg")
@@ -30,11 +31,11 @@ const svg = d3.select(`#${mapDivId}`)
 
 // Adjust projection based on scale and center of the map 
 const projection = d3.geoMercator()
-    .center([centerLat, centerLon])     // GPS of location to zoom on
-    .scale(defaultScale)                       // This is like the zoom
-    .translate([ width/2, height/2 ])
+    .center([centerLat, centerLon])     // Geo locations to zoom on
+    .scale(defaultScale)                // Default zoom
+    .translate([ width/2, height/2 ])   // Place the zoomed on area in the middle of the svg
 
-// parsing date
+// formatting date from Date objects
 const formatDate = d3.timeFormat("%Y-%m-%d");
 
 // calculate geo path to be used for d tag in svg 
@@ -44,48 +45,53 @@ const path = d3.geoPath()
 function initLegend() {
     colors = (selectedCategory === "Covid-19 Infections") ? 
         total_reported_colors : (selectedCategory === "Hospital Admissions") ?
-        hospital_admission_colors : deceased_colors
+        hospital_admission_colors : deceased_colors;
+
     ranges = (selectedCategory === "Covid-19 Infections") ? 
-    total_reported_ranges : (selectedCategory === "Hospital Admissions") ?
-    hospital_admission_ranges : deceased_ranges
+        total_reported_ranges : (selectedCategory === "Hospital Admissions") ?
+        hospital_admission_ranges : deceased_ranges;
+
     const legend = d3.select("body").append('svg')
-    .attr('class', 'legend')
-    .attr('width', 148)
-    .attr('height', 148)
-    .selectAll('g')
-    .data(colors)
-    .enter().append('g')
-    .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
-    legend.append("rect")
-    //that's 18px wide
-    .attr("width", 18)
-    //and 18px high
-    .attr("height", 18)
-    //then fill it will the color assigned by the scale
-    .style("fill", function(d) {
-        return d;
-    });
+        .attr('class', 'legend')
+        .attr('width', 148)
+        .attr('height', 148)
+        .selectAll('g')
+        .data(colors)
+        .enter().append('g')
+        .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
+        legend.append("rect")
+        //that's 18px wide
+        .attr("width", 18)
+        //and 18px high
+        .attr("height", 18)
+        //then fill it will the color assigned by the scale
+        .style("fill", function(d) {
+            return d;
+        });
+
     legend.append("text")
-    .attr("x", 24)
-    .attr("y", 9)
-    .attr("dy", ".35em")
-    .text(function(d, i) { 
-            return (i === 0) ? `Unknown` : (i === 1) ? `0-${ranges[0]}`:
-            (i > 1 && i < colors.length - 1) ? `${ranges[i-2]}-${ranges[i-1]}` :
-            `${ranges[ranges.length - 1]}+`;
-    });
+        .attr("x", 24)
+        .attr("y", 9)
+        .attr("dy", ".35em")
+        .text(function(d, i) { 
+                return (i === 0) ? `Unknown` : (i === 1) ? `0-${ranges[0]}`:
+                (i > 1 && i < colors.length - 1) ? `${ranges[i-2]}-${ranges[i-1]}` :
+                `${ranges[ranges.length - 1]}+`;
+        });
 }
+
 // handle zooming into an area that has been clicked, with reset (reset zoom to initial default scale)
 function reset() {
-    active = d3.select(null);
+    zoomActive = d3.select(null);
 
     svg.transition()
     .duration(750)
     .call(zoom.transform, d3.zoomIdentity);
 }
+
 function mouseclicked(dataOfPath) {  
-    if (active.node() === this) return reset();
-    active = d3.select(this);
+    if (zoomActive.node() === this) return reset();
+    zoomActive = d3.select(this);
     
     d3.event.stopPropagation();
 
@@ -109,10 +115,10 @@ const zoom = d3.zoom()
     .translateExtent([[0, 0], [width, height]])
     .scaleExtent([scaleMinExtent, scaleMaxExtent])
     .on("zoom", zoomFunction);
+
 svg.call(zoom);
 
 d3.helper = {};
-
 d3.helper.tooltip = function(accessor){
     return function(selection){
         let tooltipDiv;
@@ -162,13 +168,13 @@ function groupByValueAndSum(data) {
         if (!res[value.Province]) {
 
             if (selectedCategory === "Covid-19 Infections") {
-            res[value.Province] = { Province: value.Province,  Total_reported: 0 };
+                res[value.Province] = { Province: value.Province,  Total_reported: 0 };
             } else if (selectedCategory === "Hospital Admissions") {
-            res[value.Province] = { Province: value.Province,  Hospital_admission: 0 };
+                res[value.Province] = { Province: value.Province,  Hospital_admission: 0 };
             } else if (selectedCategory === "Deceased") {
-            res[value.Province] = { Province: value.Province,  Deceased: 0 };
+                res[value.Province] = { Province: value.Province,  Deceased: 0 };
             } else {
-                console.warn(`selected category= ${selectedCategory}. Not found when grouping and summing.`)
+                console.warn(`Selected category= ${selectedCategory}. Not found when grouping and summing.`)
             }
             
             result.push(res[value.Province])
@@ -181,7 +187,7 @@ function groupByValueAndSum(data) {
         } else if (selectedCategory === "Deceased") {
             res[value.Province].Deceased += +value.Deceased;
         } else {
-            console.warn(`selected category = ${selectedCategory}. Summing went wrong.`)
+            console.warn(`Selected category = ${selectedCategory}. Summing went wrong.`)
         }
 
         return res;
@@ -227,6 +233,7 @@ function joinMapCovidCumulativeData(mapData, covidData) {
                     elem.Municipality_name;
             });
         }
+
         if (placeObjRow.length > 1) {
             return console.error(`Encountered multiple values while filtering for ${e.properties.areaName}. Result: ${placeObjRow}`);
         } 
@@ -256,17 +263,35 @@ function fillLocations(d) {
     }
 }
 
-function drawMap(data) {
-    if (d3.select(`#${gElemId}`)) d3.select(`#${gElemId}`).remove();
-    if (d3.select("svg.legend")) d3.select("svg.legend").remove();
+function tooltipText(d) {
+    return "<b>"+ (municipalityMode ? d.properties.areaName : d.properties.name)  + "</b>" 
+    + (
+        (d.properties[covidObjectKey] !== undefined) 
+        ? (
+            (selectedCategory === "Covid-19 Infections") ? "<br\/>Total_reported: " + d.properties[covidObjectKey].Total_reported 
+                : (selectedCategory === "Hospital Admissions") ? "<br\/>Hospital_admission: " + d.properties[covidObjectKey].Hospital_admission
+            : "<br\/>Deceased: " + d.properties[covidObjectKey].Deceased
+            ) 
+        : ""
+    );
+}
 
+function drawMap(data) {
+    // Clean/reset the map and legend to add new data to it. 
+    if (d3.select(`#${gElemId}`)) d3.select(`#${gElemId}`).remove();
+    if (d3.select(`svg${legendClass}`)) d3.select(`svg${legendClass}`).remove();
+
+    // initialize the legend for the map.
     initLegend();
     
-    // Load the polygon data of the Netherlands and show it.
+    // Append the g element where the paths will be stored and reset zoom if active.
+    if (zoomActive) reset(); 
+    
     g = svg.append("g")
     .attr("id", gElemId)
     .attr("transform", d3.zoomIdentity);
 
+    // Add paths for each data element and project geo coordinates on the map.
     g.selectAll("path")
     .data(data)
     .enter()
@@ -274,20 +299,7 @@ function drawMap(data) {
     .attr("d", path)
     .style("fill", fillLocations)
     .on("click", mouseclicked)
-    .call(d3.helper.tooltip(
-        function(d) {
-            return "<b>"+ (municipalityMode ? d.properties.areaName : d.properties.name)  + "</b>" 
-            + (
-                (d.properties[covidObjectKey] !== undefined) 
-                ? (
-                    (selectedCategory === "Covid-19 Infections") ? "<br\/>Total_reported: " + d.properties[covidObjectKey].Total_reported 
-                     : (selectedCategory === "Hospital Admissions") ? "<br\/>Hospital_admission: " + d.properties[covidObjectKey].Hospital_admission
-                    : "<br\/>Deceased: " + d.properties[covidObjectKey].Deceased
-                  ) 
-                : ""
-            );
-        }
-    ));
+    .call(d3.helper.tooltip(tooltipText));
 }
 
 

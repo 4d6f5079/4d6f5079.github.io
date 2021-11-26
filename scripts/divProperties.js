@@ -2,13 +2,14 @@ function updateDate() {
     if (!municipalitiesJson && !provinceJson && !covidCumulative) return;
 
     selectedDate = document.getElementById("selectedDate").value;
-
+    
     const data = municipalityCheck();
     drawMap(data);
 }
 
 function updateCategory() {
     if (!municipalitiesJson && !provinceJson && !covidCumulative) return;
+    
     selectedCategory = document.getElementById("covid-category").value;
 
     const data = municipalityCheck();

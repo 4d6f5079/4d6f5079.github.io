@@ -14,34 +14,21 @@ path {
   cursor: pointer;
 }
 
-.tooltip{ 
-  background-color:rgba(0,0,0,0.5);
-  color:#fff;
+.tooltip {
+  background-color: rgba(0, 0, 0, 0.5);
+  color: #fff;
   padding: 10px;
-  -webkit-border-radius:10px;
-  -moz-border-radius:10px;
-  border-radius:10px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  border-radius: 10px;
 }
-
-
-
-/* .hh1 { background: #9dd1cd;}
-.hh2 { background: #5ecbfd;}
-.hh3 { background: #08a9e9;}
-.hh4 { background: #3d78f5;}
-.hh5 { background: #3f35d1;}
-
-.dd1 { background: #9dd1a0;}
-.dd2 { background: #77f897;}
-.dd3 { background: #42f03c;}
-.dd4 { background: #22b61d;}
-.dd5 { background: #054b0b;} */
 
 #div-container {
   display: grid;
   grid-template-columns: 1fr;
   gap: 10px 2em;
 }
+
 .div-container :first-child {
   align-self: center;
 }
@@ -51,18 +38,4 @@ path {
   cursor: pointer;
   cursor: -moz-grabbing;
   cursor: -webkit-grabbing;
-} 
-
-/* .flex-container {
-  display: flex;
 }
-
-.flex-child {
-  flex: 1;
-  border: 2px solid rgb(255, 0, 0);
-}
-
-.flex-child:first-child {
-  margin-right: 50%;
-} */
-
