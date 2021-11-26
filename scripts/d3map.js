@@ -203,9 +203,7 @@ function joinMapCovidCumulativeData(mapData, covidData) {
 function fillLocations(d) {
     const covidD = d.properties[covidObjectKey];
     if (covidD !== undefined) {
-        const category = (selectedCategory === "Covid-19 Infections") ? 
-        +covidD.Total_reported : (selectedCategory === "Hospital Admissions") ?
-        +covidD.Hospital_admission : +covidD.Deceased
+        const category = getCategory(covidD);
         if (0 <= category && category <= ranges[0]) {
             return colors[1];
         } 
@@ -225,6 +223,7 @@ function drawMap(data) {
     if (d3.select("svg.legend")) d3.select("svg.legend").remove();
 
     initLegend();
+    drawChart(data);
     
     // Load the polygon data of the Netherlands and show it.
     g = svg.append("g")
@@ -240,7 +239,7 @@ function drawMap(data) {
     .on("click", mouseclicked)
     .call(d3.helper.tooltip(
         function(d) {
-            return "<b>"+ (municipalityMode ? d.properties.areaName : d.properties.name)  + "</b>" 
+            return "<b>"+ getMode(d)  + "</b>" 
             + (
                 (d.properties[covidObjectKey] !== undefined) 
                 ? (
@@ -254,5 +253,75 @@ function drawMap(data) {
     ));
 }
 
+function getMode(d) {
+    return municipalityMode ? d.properties.areaName : d.properties.name
+}
+function getCategory(covidD) {
+    return (selectedCategory === "Covid-19 Infections") ? 
+        +covidD.Total_reported : (selectedCategory === "Hospital Admissions") ?
+        +covidD.Hospital_admission : +covidD.Deceased;
+}
+
+function getCatWithUndefCheck(d) {
+    const covidD = d.properties[covidObjectKey]
+    if (covidD !== undefined) {
+        const category = getCategory(covidD);
+        return category;
+    } else {
+        return 0;
+    }
+}
+function drawChart(data) {
+    if (d3.select("svg.chart")) d3.select("svg.chart").remove();
+
+    // set the dimensions and margins of the graph
+    const margin = {top: 20, right: 30, bottom: 40, left: 90},
+    width = 1100 - margin.left - margin.right,
+    height = municipalityMode ? 3500 : 300 - margin.top - margin.bottom;
+
+    // append the svg object to the body of the page
+    const svg_chart = d3.select("#horizontal-chart")
+    .append("svg")
+    .attr('class', 'chart')
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+    .attr("transform",
+        "translate(" + margin.left + "," + margin.top + ")");
+    
+
+    const max = d3.max(data, function (d) { 
+        return getCatWithUndefCheck(d)
+    });
+    // Add X axis
+    const x = d3.scaleLinear()
+    .domain([0, max])
+    .range([ 0, width]);
+    svg_chart.append("g")
+    .attr("transform", "translate(0," + height + ")")
+    .call(d3.axisBottom(x))
+    .selectAll("text")
+        .attr("transform", "translate(-10,0)rotate(-45)")
+        .style("text-anchor", "end");
+
+    // Y axis
+    const y = d3.scaleBand()
+    .range([ 0, height ])
+    .domain(data.map(function(d) { return getMode(d); }))
+    .padding(.1);
+    svg_chart.append("g")
+    .call(d3.axisLeft(y))
+
+    //Bars
+    svg_chart.selectAll("myRect")
+    .data(data)
+    .enter()
+    .append("rect")
+    .attr("x", x(0) )
+    .attr("y", function(d) { return y(getMode(d)); })
+    .attr("width", function(d) { return x(getCatWithUndefCheck(d)); })
+    .attr("height", y.bandwidth() )
+    .attr("fill", "#69b3a2")
+}
 
 

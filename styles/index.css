@@ -42,6 +42,13 @@ path {
   grid-template-columns: 1fr;
   gap: 10px 2em;
 }
+
+#d3-map {
+  float:left; 
+}
+#horizontal-chart {
+  float: right;
+}
 .div-container :first-child {
   align-self: center;
 }
