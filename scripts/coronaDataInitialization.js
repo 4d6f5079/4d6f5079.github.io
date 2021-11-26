@@ -2,8 +2,6 @@ var municipalitiesJson;
 var covidCumulative;
 var provinceJson;
 
-console.log(d3.version);
-
 
 if (!municipalitiesJson || !covidCumulative || !provinceJson) {
     Promise.all([
@@ -18,6 +16,7 @@ if (!municipalitiesJson || !covidCumulative || !provinceJson) {
         covidCumulative = allData[2];
 
         document.getElementById("selectedDate").min = formatDate(new Date(covidCumulative[0].Date_of_report));
+        document.getElementById("selectedDate").max = formatDate(new Date(covidCumulative[covidCumulative.length - 1].Date_of_report));
 
         const data = municipalityCheck();
 

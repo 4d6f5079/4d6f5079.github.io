@@ -155,6 +155,41 @@ d3.helper.tooltip = function(accessor){
     };
 };
 
+function groupByValueAndSum(data) {
+    const result = [];
+
+    data.reduce(function(res, value) {
+        if (!res[value.Province]) {
+
+            if (selectedCategory === "Covid-19 Infections") {
+            res[value.Province] = { Province: value.Province,  Total_reported: 0 };
+            } else if (selectedCategory === "Hospital Admissions") {
+            res[value.Province] = { Province: value.Province,  Hospital_admission: 0 };
+            } else if (selectedCategory === "Deceased") {
+            res[value.Province] = { Province: value.Province,  Deceased: 0 };
+            } else {
+                console.warn(`selected category= ${selectedCategory}. Not found when grouping and summing.`)
+            }
+            
+            result.push(res[value.Province])
+        }
+
+        if (selectedCategory === "Covid-19 Infections") {
+            res[value.Province].Total_reported += +value.Total_reported;
+        } else if (selectedCategory === "Hospital Admissions") {
+            res[value.Province].Hospital_admission += +value.Hospital_admission;
+        } else if (selectedCategory === "Deceased") {
+            res[value.Province].Deceased += +value.Deceased;
+        } else {
+            console.warn(`selected category = ${selectedCategory}. Summing went wrong.`)
+        }
+
+        return res;
+    }, {})
+
+    return result;
+}
+
 function municipalityCheck() {
     if (municipalityMode) {
         return joinMapCovidCumulativeData(municipalitiesJson, covidCumulative);
@@ -164,33 +199,34 @@ function municipalityCheck() {
 }
 
 function joinMapCovidCumulativeData(mapData, covidData) {
-    // DO SOME PREPROCESSING ON ALL THE DATA.
+    // GET ONLY THE COVID DATA OF THE SELECTED DATE.
     const covidFilteredByDate = covidData.filter(obj => {
-        if (municipalityMode) {
-            if (obj.Municipality_code === '') return false;
-        } else {
-            if (obj.Municipality_code !== '') return false;
-        }
+        if (obj.Municipality_code === '') return false;
         
         const objDateString = formatDate(new Date(obj.Date_of_report));
         return objDateString === selectedDate;
     });
+    
+    // ONLY GET GROUPED AND SUMMED COVID DATA WHEN PROVINCE MODE IS SELECTED.
+    let groupedSummedPerProvince;
+    if (!municipalityMode) {
+        groupedSummedPerProvince = groupByValueAndSum(covidFilteredByDate);
+    }
 
-    // JOIN DATA WITH NL.JSON DATA
+    // JOIN PROCESSED COVID DATA WITH GEOJSON DATA.
     return mapData.features.map(e => {
         let placeObjRow;
-
-        if (municipalityMode) {
-            placeObjRow = covidFilteredByDate.filter(elem => {
-                return e.properties.areaName=== 
-                    elem.Municipality_name;
+        
+        if (!municipalityMode) {
+            placeObjRow = groupedSummedPerProvince.filter(elem => {
+                return e.properties.name === elem.Province;
             });
         } else {
             placeObjRow = covidFilteredByDate.filter(elem => {
-                return e.properties.name === elem.Province;
-            });   
+                return e.properties.areaName === 
+                    elem.Municipality_name;
+            });
         }
-
         if (placeObjRow.length > 1) {
             return console.error(`Encountered multiple values while filtering for ${e.properties.areaName}. Result: ${placeObjRow}`);
         } 

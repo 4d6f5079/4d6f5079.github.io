@@ -4,7 +4,6 @@ function updateDate() {
     selectedDate = document.getElementById("selectedDate").value;
 
     const data = municipalityCheck();
-
     drawMap(data);
 }
 
@@ -13,7 +12,6 @@ function updateCategory() {
     selectedCategory = document.getElementById("covid-category").value;
 
     const data = municipalityCheck();
-
     drawMap(data);
 }
 
@@ -29,6 +27,5 @@ function toggleRegionArea() {
     }
     
     const data = municipalityCheck();
-
     drawMap(data);
 }
