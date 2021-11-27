@@ -14,21 +14,33 @@ path {
   cursor: pointer;
 }
 
-.tooltip{ 
-  background-color:rgba(0,0,0,0.5);
-  color:#fff;
+.tooltip {
+  background-color: rgba(0, 0, 0, 0.5);
+  color: #fff;
   padding: 10px;
-  -webkit-border-radius:10px;
-  -moz-border-radius:10px;
-  border-radius:10px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  border-radius: 10px;
 }
-
 
 #div-container {
   display: grid;
   grid-template-columns: 1fr;
   gap: 10px 2em;
 }
+
+.axis {
+  font: 14px sans-serif;
+}
+
+#d3-map {
+  float: left;
+}
+
+#horizontal-chart {
+  float: left;
+}
+
 .div-container :first-child {
   align-self: center;
 }
@@ -38,18 +50,4 @@ path {
   cursor: pointer;
   cursor: -moz-grabbing;
   cursor: -webkit-grabbing;
-} 
-
-/* .flex-container {
-  display: flex;
 }
-
-.flex-child {
-  flex: 1;
-  border: 2px solid rgb(255, 0, 0);
-}
-
-.flex-child:first-child {
-  margin-right: 50%;
-} */
-
