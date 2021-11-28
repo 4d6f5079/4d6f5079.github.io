@@ -299,6 +299,9 @@ function drawMap(data) {
     if (d3.select(`#${gElemId}`)) d3.select(`#${gElemId}`).remove();
     if (d3.select(`g${legendClass}`)) d3.select(`g${legendClass}`).remove();
     
+    // initialize the legend for the map.
+    initLegend();
+    
     // Append the g element where the paths will be stored and reset zoom if active.
     if (zoomActive) reset(); 
 
@@ -316,8 +319,6 @@ function drawMap(data) {
     .on("click", mouseclicked)
     .call(d3.helper.tooltip(tooltipText, true));
 
-    // initialize the legend for the map.
-    initLegend();
 }
 
 
