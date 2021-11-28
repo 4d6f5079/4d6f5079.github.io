@@ -16,12 +16,16 @@ const legendClass = ".legend";
 const total_reported_colors = ["grey", "#c7bc7b","#cacc43","#dfb236","#e2860e","#e25c0e"]
 const hospital_admission_colors = ["grey", "#9dd1cd", "#5ecbfd", "#08a9e9", "#3d78f5", "#3f35d1"]
 const deceased_colors = ["grey", "#9dd1a0", "#77f897", "#42f03c", "#22b61d", "#054b0b"]
-const total_reported_ranges = [500,1000,1500,2000]
-const hospital_admission_ranges = [250,500,750,1000]
-const deceased_ranges = [100,200,300,400]
+const total_reported_ranges_municipalities = [1000,2000,3000,4000]
+const total_reported_ranges_provinces = [3000,6000,9000,12000]
+const hospital_admission_ranges_municipalities = [500,1000,1500,2000]
+const hospital_admission_ranges_provinces = [1500,3000,4500,6000]
+const deceased_ranges_municipalities = [200,400,600,800]
+const deceased_ranges_provinces = [600,1200,1800,2400]
+
 
 let colors = total_reported_colors
-let ranges = total_reported_ranges
+let ranges = total_reported_ranges_municipalities
 let zoomActive = d3.select(null); // used for zooming and reset zoom 
 
 const svg = d3.select(`#${mapDivId}`)
@@ -48,8 +52,10 @@ function initLegend() {
         hospital_admission_colors : deceased_colors;
 
     ranges = (selectedCategory === "Covid-19 Infections") ? 
-        total_reported_ranges : (selectedCategory === "Hospital Admissions") ?
-        hospital_admission_ranges : deceased_ranges;
+                (municipalityMode ? total_reported_ranges_municipalities : total_reported_ranges_provinces) :
+            (selectedCategory === "Hospital Admissions") ?
+                (municipalityMode ? hospital_admission_ranges_municipalities : hospital_admission_ranges_provinces) : 
+                (municipalityMode ? deceased_ranges_municipalities : deceased_ranges_provinces);
 
     const legend = svg.append("g")
         .attr('class', 'legend')
