@@ -17,10 +17,10 @@ const total_reported_colors = ["grey", "#c7bc7b","#cacc43","#dfb236","#e2860e","
 const hospital_admission_colors = ["grey", "#9dd1cd", "#5ecbfd", "#08a9e9", "#3d78f5", "#3f35d1"]
 const deceased_colors = ["grey", "#9dd1a0", "#77f897", "#42f03c", "#22b61d", "#054b0b"]
 const total_reported_ranges_municipalities = [1000,2000,3000,4000]
-const total_reported_ranges_provinces = [3000,6000,9000,12000]
-const hospital_admission_ranges_municipalities = [500,1000,1500,2000]
+const total_reported_ranges_provinces = [30000,60000,90000,120000]
+const hospital_admission_ranges_municipalities = [50,100,150,200]
 const hospital_admission_ranges_provinces = [1500,3000,4500,6000]
-const deceased_ranges_municipalities = [200,400,600,800]
+const deceased_ranges_municipalities = [50,100,150,200]
 const deceased_ranges_provinces = [600,1200,1800,2400]
 
 
