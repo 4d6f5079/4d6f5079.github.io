@@ -178,7 +178,7 @@ d3.helper.tooltip = function(accessor, flag){
 function groupByValueAndSum(data) {
     const result = [];
 
-    data.reduce(function(res, value) {
+    data.reduce((res, value) => {
         if (!res[value.Province]) {
 
             if (selectedCategory === "Covid-19 Infections") {
@@ -226,18 +226,15 @@ function joinMapCovidCumulativeData(mapData, covidData) {
         const objDateString = formatDate(new Date(obj.Date_of_report));
         return objDateString === selectedDate;
     });
-    
-    // ONLY GET GROUPED AND SUMMED COVID DATA WHEN PROVINCE MODE IS SELECTED.
-    let groupedSummedPerProvince;
-    if (!municipalityMode) {
-        groupedSummedPerProvince = groupByValueAndSum(covidFilteredByDate);
-    }
 
     // JOIN PROCESSED COVID DATA WITH GEOJSON DATA.
     return mapData.features.map(e => {
         let placeObjRow;
         
         if (!municipalityMode) {
+            // ONLY GET GROUPED AND SUMMED COVID DATA WHEN PROVINCE MODE IS SELECTED.
+            const groupedSummedPerProvince = groupByValueAndSum(covidFilteredByDate);
+
             placeObjRow = groupedSummedPerProvince.filter(elem => {
                 return e.properties.name === elem.Province;
             });
@@ -293,6 +290,9 @@ function drawMap(data) {
     if (d3.select(`#${gElemId}`)) d3.select(`#${gElemId}`).remove();
     if (d3.select(`g${legendClass}`)) d3.select(`g${legendClass}`).remove();
     
+    // initialize the legend for the map.
+    initLegend();
+
     // Append the g element where the paths will be stored and reset zoom if active.
     if (zoomActive) reset(); 
 
@@ -309,9 +309,6 @@ function drawMap(data) {
     .style("fill", fillLocations)
     .on("click", mouseclicked)
     .call(d3.helper.tooltip(tooltipText, true));
-
-    // initialize the legend for the map.
-    initLegend();
 }
 
 
