@@ -54,6 +54,26 @@ path {
   float: right;
 }
 
+#horizontal-chart {
+  width: 960px;
+  height: 470px;
+  overflow-y: scroll;
+}
+
+#horizontalHeader {
+  margin-left: 150px;
+}
+.tick text {
+  fill: #000;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #909090;
+  shape-rendering: crispEdges;
+}
+
 /* Apply a "closed-hand" cursor during drag operation.*/
 .grabbable {
   cursor: pointer;

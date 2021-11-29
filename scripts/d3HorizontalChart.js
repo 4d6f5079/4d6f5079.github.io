@@ -23,11 +23,13 @@ function getCatWithUndefCheck(d) {
 
 function drawChart(data) {
     if (d3.select("svg.chart")) d3.select("svg.chart").remove();
-
+    if (d3.select("svg.x-axis")) d3.select("svg.x-axis").remove();
+    // set title 
+    horizontalHeader.innerText = getTitleText()
     // set the dimensions and margins of the graph
-    const margin = {top: 50, right: 30, bottom: 80, left: 150},
-    width = 800 - margin.left - margin.right,
-    height = (municipalityMode ? 600 : 400) - margin.top - margin.bottom;
+    const margin = {top: 0, right: 30, bottom: 0, left: 220},
+    width = 920 - margin.left - margin.right,
+    height = (municipalityMode ? 5500 : 550) - margin.top - margin.bottom;
 
     // append the svg object to the body of the page
     const svg_chart = d3.select("#horizontal-chart")
@@ -39,36 +41,49 @@ function drawChart(data) {
     .attr("transform",
         "translate(" + margin.left + "," + margin.top + ")");
     
-    const top30Data = data.slice()
+    const topData = data.slice()
         .sort((a, b) => d3.descending(getCatWithUndefCheck(a), getCatWithUndefCheck(b)))
-        .filter(function(d, i) { return i >= 0 && i < 30; })
-    const max = d3.max(top30Data, function (d) { 
+
+    const max = d3.max(topData, function (d) { 
             return getCatWithUndefCheck(d)
         });
-
     // Add X axis
     const x = d3.scaleLinear()
     .domain([0, max])
     .range([ 0, width]);
+
+    const xAxis = d3.axisBottom(x)
+    var xAxisSvg = d3.select('#xaxis').append('svg')
+      .attr('class', 'x-axis')
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", 20)
+      .append("g")
+
+    var xAxisDom = xAxisSvg.selectAll('.x.axis')
+    if (xAxisDom.empty()) {
+    xAxisDom = xAxisSvg.append("g")
+        .attr("class", "x axis")
+    }
+    xAxisDom
+    .attr("transform", "translate("+ margin.left +"," + margin.bottom + ")")
+    .call(xAxis);
+
+    xAxisDom
+    .selectAll('.tick text')
+    .text(function (d) { if (d < 0) return -d; else return d; })
+      
+
     svg_chart.append("text")
     .attr("x", (width / 2))             
     .attr("y", 0 - (margin.top / 2))
     .attr("text-anchor", "middle")  
     .style("font-size", "30px") 
     .style("font-weight", "bold")  
-    .text(getTitleText());
-    svg_chart.append("g")
-    .attr("class", "axis")
-    .attr("transform", "translate(0," + height + ")")
-    .call(d3.axisBottom(x))
-    .selectAll("text")
-        .attr("transform", "translate(-10,0)rotate(-45)")
-        .style("text-anchor", "end");
 
     // Y axis
     const y = d3.scaleBand()
     .range([ 0, height ])
-    .domain(top30Data.map(function(d) { return getMode(d); }))
+    .domain(topData.map(function(d) { return getMode(d); }))
     .padding(.1);
     svg_chart.append("g")
     .attr("class", "axis")
@@ -79,17 +94,24 @@ function drawChart(data) {
     .append('linearGradient')
     .attr('id', 'bg-gradient')
     // .attr('gradientTransform', 'rotate(90)');
+
+    const startColor = (selectedCategory === "Covid-19 Infections") ? 
+    "#F2C66B" : (selectedCategory === "Hospital Admissions") ?
+    "#00FFFF" : "#ADFF2F";
+    const stopColor = (selectedCategory === "Covid-19 Infections") ? 
+    "#D13D73" : (selectedCategory === "Hospital Admissions") ?
+    "#0000FF" : "#006400";
     bgGradient
     .append('stop')
-    .attr('stop-color', '#F2C66B')
+    .attr('stop-color', startColor)
     .attr('offset', '0%');
     bgGradient
     .append('stop')
-    .attr('stop-color', '#D13D73')
+    .attr('stop-color', stopColor)
     .attr('offset', '100%');
     //Bars
     svg_chart.selectAll("myRect")
-    .data(top30Data)
+    .data(topData)
     .enter()
     .append("rect")
     .attr("x", x(0) )
