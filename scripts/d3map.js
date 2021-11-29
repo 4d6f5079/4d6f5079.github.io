@@ -23,7 +23,6 @@ const hospital_admission_ranges_provinces = [1500,3000,4500,6000]
 const deceased_ranges_municipalities = [50,100,150,200]
 const deceased_ranges_provinces = [600,1200,1800,2400]
 
-
 let colors = total_reported_colors
 let ranges = total_reported_ranges_municipalities
 let zoomActive = d3.select(null); // used for zooming and reset zoom 
