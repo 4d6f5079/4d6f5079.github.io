@@ -13,8 +13,8 @@
     <div id="div-container">
       <!-- Top and Bottom -->
       <div id="inputs-container">
-        <div>
-          <label for="CoVid-19-date">CoVid-19 date:</label>
+        <div id="date-picker-container">
+          <label for="CoVid-19-date">Select date: </label>
           <input
             type="date"
             id="selectedDate"
@@ -24,7 +24,9 @@
             max="2021-11-18"
           />
         </div>
+
         <button class="button" onclick="updateDate()">Select Date</button>
+
         <button
           class="button"
           id="toggleAreaButton"
@@ -32,15 +34,19 @@
         >
           Show Province Mode
         </button>
-        <select
-          name="covid-category"
-          id="covid-category"
-          onchange="updateCategory();"
-        >
-          <option value="Covid-19 Infections">Covid-19 Infections</option>
-          <option value="Hospital Admissions">Hospital Admissions</option>
-          <option value="Deceased">Deceased</option>
-        </select>
+
+        <div id="category-selection-container">
+          <label>Select category: </label>
+          <select
+            name="covid-category"
+            id="covid-category"
+            onchange="updateCategory();"
+          >
+            <option value="Covid-19 Infections">Covid-19 Infections</option>
+            <option value="Hospital Admissions">Hospital Admissions</option>
+            <option value="Deceased">Deceased</option>
+          </select>
+        </div>
       </div>
 
       <div id="map-container">
@@ -52,7 +58,6 @@
         <div id="horizontal-chart"></div>
         <div id="xaxis"></div>
       </div>
-      <!-- TODO: Add some more divs for other visualization types -->
     </div>
 
     <script src="https://d3js.org/d3.v5.js"></script>

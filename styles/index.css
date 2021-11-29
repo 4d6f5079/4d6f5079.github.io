@@ -1,5 +1,6 @@
 body {
   background-color: #ffffff;
+  font-family: sans-serif;
 }
 
 svg {
@@ -33,8 +34,8 @@ path {
 }
 
 #inputs-container {
-  margin-top: 10px;
-  margin-bottom: 10px;
+  margin-top: 5px;
+  margin-bottom: 5px;
   display: flex;
   justify-content: space-evenly;
   align-items: center;
@@ -48,6 +49,21 @@ path {
 
 #map-container {
   float: left;
+}
+
+#d3-map {
+  cursor: move; /* fallback if grab cursor is unsupported */
+  cursor: grab;
+  cursor: -moz-grab;
+  cursor: -webkit-grab;
+}
+
+/* Apply a "closed-hand" cursor during drag operation.*/
+#d3-map:active,
+#d3-map path:active {
+  cursor: pointer;
+  cursor: -moz-grabbing;
+  cursor: -webkit-grabbing;
 }
 
 #horizontal-chart-container {
@@ -74,36 +90,20 @@ path {
   shape-rendering: crispEdges;
 }
 
-/* Apply a "closed-hand" cursor during drag operation.*/
-.grabbable {
-  cursor: pointer;
-  cursor: -moz-grabbing;
-  cursor: -webkit-grabbing;
-}
-
 /* DATE PICKER INPUT STYLING */
 input[type="date"] {
   background: #4cb8c4;
+  margin-left: 5px;
   width: 207px;
+  height: 35px;
   transition: 0.5s;
   padding: 5px;
-  font-family: monospace;
+  font-family: sans-serif;
   color: #000000;
-  font-size: 20px;
+  font-size: 17px;
   border: none;
   outline: none;
   border-radius: 2px;
-}
-
-input[type="date"]:active {
-  background-color: #3cd3ad;
-}
-
-input[type="date"]:hover {
-  cursor: pointer;
-  background-position: right center; /* change the direction of the change here */
-  color: rgb(0, 0, 0);
-  text-decoration: none;
   background-image: linear-gradient(
     to right,
     #4cb8c4 0%,
@@ -112,7 +112,35 @@ input[type="date"]:hover {
   );
 }
 
-::-webkit-calendar-picker-indicator {
+/* INPUT STYLING FOR MOZILLA FIREFOX ONLY SINCE WIDTH IS DIFFERENT FOR DATE PICKER */
+@-moz-document url-prefix() {
+  input[type="date"] {
+    background: #4cb8c4;
+    margin-left: 5px;
+    width: 255px;
+    height: 35px;
+    transition: 0.5s;
+    padding: 5px;
+    font-family: sans-serif;
+    color: #000000;
+    font-size: 17px;
+    border: none;
+    outline: none;
+    border-radius: 2px;
+    background-image: linear-gradient(
+      to right,
+      #4cb8c4 0%,
+      #3cd3ad 51%,
+      #4cb8c4 100%
+    );
+  }
+}
+
+input[type="date"]:active {
+  background-color: #3cd3ad;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
   cursor: pointer;
 }
 
@@ -126,9 +154,9 @@ input[type="date"]:hover {
   );
 }
 .button {
-  font-family: monospace;
+  font-family: sans-serif;
   padding: 15px 25px;
-  font-size: 13px;
+  font-size: 17px;
   text-align: center;
   cursor: pointer;
   outline: none;
@@ -149,7 +177,44 @@ input[type="date"]:hover {
 }
 
 .button:active {
-  background-color: #3e8e41;
+  /* background-color: #3e8e41; */
   box-shadow: 0 3px #666;
   transform: translateY(1px);
+}
+
+/* SELECT DROPDOWN MENU STYLING */
+select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  margin: 5px;
+  width: 300px;
+  height: 40px;
+  padding: 5px 35px 5px 8px;
+  font-size: 17px;
+  color: #000;
+  font-family: sans-serif;
+  border: 1px solid #28cbdd;
+  border-radius: 2px;
+  appearance: none;
+  background: url("data:image/svg+xml;utf8,<svg fill='black' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>")
+    100% / 15% no-repeat #3cd3ad;
+}
+
+/* select:focus {
+  border-color: #4cb8c4;
+  background-color: #3cd3ad;
+} */
+
+/* Internet Explorer hackery ahead */
+
+select::-ms-expand {
+  display: none; /* Remove default arrow in Internet Explorer 10 and 11 */
+}
+
+/* Target Internet Explorer 9 to undo the custom arrow */
+@media screen and (min-width: 0\0) {
+  select {
+    background: none\9;
+    padding: 5px\9;
+  }
 }
