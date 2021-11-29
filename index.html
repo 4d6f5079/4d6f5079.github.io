@@ -12,7 +12,7 @@
   <body>
     <div id="div-container">
       <!-- Top and Bottom -->
-      <div id="inputs-div">
+      <div id="inputs-container">
         <div>
           <label for="CoVid-19-date">CoVid-19 date:</label>
           <input
@@ -38,11 +38,17 @@
           <option value="Deceased">Deceased</option>
         </select>
       </div>
-      <div id="map-div">
-        <div id="d3-map" class="grabbable"></div>
-        <div id="horizontal-chart"></div>
-        <!-- TODO: Add some more divs for other visualization types -->
+
+      <div id="map-container">
+        <div id="d3-map"></div>
       </div>
+
+      <div id="horizontal-chart-container">
+        <h1 id="horizontalHeader"></h1>
+        <div id="horizontal-chart"></div>
+        <div id="xaxis"></div>
+      </div>
+      <!-- TODO: Add some more divs for other visualization types -->
     </div>
 
     <script src="https://d3js.org/d3.v5.js"></script>
