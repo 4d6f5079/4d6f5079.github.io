@@ -80,3 +80,76 @@ path {
   cursor: -moz-grabbing;
   cursor: -webkit-grabbing;
 }
+
+/* DATE PICKER INPUT STYLING */
+input[type="date"] {
+  background: #4cb8c4;
+  width: 207px;
+  transition: 0.5s;
+  padding: 5px;
+  font-family: monospace;
+  color: #000000;
+  font-size: 20px;
+  border: none;
+  outline: none;
+  border-radius: 2px;
+}
+
+input[type="date"]:active {
+  background-color: #3cd3ad;
+}
+
+input[type="date"]:hover {
+  cursor: pointer;
+  background-position: right center; /* change the direction of the change here */
+  color: rgb(0, 0, 0);
+  text-decoration: none;
+  background-image: linear-gradient(
+    to right,
+    #4cb8c4 0%,
+    #3cd3ad 51%,
+    #4cb8c4 100%
+  );
+}
+
+::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+}
+
+/* BUTTON ANIMATIONS AND GRADIENT */
+.button {
+  background-image: linear-gradient(
+    to right,
+    #4cb8c4 0%,
+    #3cd3ad 51%,
+    #4cb8c4 100%
+  );
+}
+.button {
+  font-family: monospace;
+  padding: 15px 25px;
+  font-size: 13px;
+  text-align: center;
+  cursor: pointer;
+  outline: none;
+  transition: 0.5s;
+  color: rgb(0, 0, 0);
+  background-color: #04aa6d;
+  background-size: 200% auto;
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0 4px rgb(255, 255, 255);
+  display: block;
+}
+
+.button:hover {
+  background-position: right center; /* change the direction of the change here */
+  color: rgb(0, 0, 0);
+  text-decoration: none;
+}
+
+.button:active {
+  background-color: #3e8e41;
+  box-shadow: 0 3px #666;
+  transform: translateY(1px);
+}
