@@ -43,12 +43,15 @@ path {
   flex-flow: row wrap;
 }
 
-.axis {
-  font: 14px sans-serif;
+#viz-container {
+  display: flex;
+  justify-content: space-evenly;
+  gap: 25px;
+  flex-flow: row wrap;
 }
 
-#map-container {
-  float: left;
+.axis {
+  font: 14px sans-serif;
 }
 
 #d3-map {
@@ -66,19 +69,21 @@ path {
   cursor: -webkit-grabbing;
 }
 
-#horizontal-chart-container {
-  float: right;
-}
-
 #horizontal-chart {
-  width: 960px;
-  height: 470px;
+  margin-right: 5%;
+  width: 940px;
+  height: 520px;
   overflow-y: scroll;
 }
-
-#horizontalHeader {
-  margin-left: 150px;
+#xaxis {
+  margin-right: 5%;
 }
+#horizontalHeader {
+  text-align: center;
+  margin-left: 3%;
+  margin-right: 3%;
+}
+
 .tick text {
   fill: #000;
 }
