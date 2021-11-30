@@ -34,7 +34,12 @@ path {
 }
 
 #inputs-container {
-  margin-top: 5px;
+  background-color: #ffffff;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  top: 0; /* for sticky to work */
+  position: sticky; /* sticks the inputs to the top of the page when it has been scrolled */
+  margin-top: 0px;
   margin-bottom: 5px;
   display: flex;
   justify-content: space-evenly;
@@ -171,7 +176,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   background-size: 200% auto;
   border: none;
   border-radius: 15px;
-  box-shadow: 0 4px rgb(255, 255, 255);
+  box-shadow: 0 3px rgb(255, 255, 255);
   display: block;
 }
 

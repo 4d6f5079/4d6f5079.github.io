@@ -17,7 +17,7 @@ function getCatWithUndefCheck(d) {
         const category = getCategory(covidD);
         return category;
     } else {
-        return 0;
+        return undefined;
     }
 }
 
