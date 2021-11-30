@@ -1,7 +1,7 @@
-function updateDate() {
+function updateDate(dateObject) {
     if (!municipalitiesJson && !provinceJson && !covidCumulative) return;
 
-    selectedDate = document.getElementById("selectedDate").value;
+    selectedDate = dateObject.value;
     
     const data = municipalityCheck();
     drawMap(data);
@@ -33,3 +33,5 @@ function toggleRegionArea() {
     drawMap(data);
     drawChart(data);
 }
+
+

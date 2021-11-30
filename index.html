@@ -19,18 +19,17 @@
             type="date"
             id="selectedDate"
             name="covid-period"
+            onchange="updateDate(this);"
             value="2021-01-06"
             min="2020-01-11"
             max="2021-11-18"
           />
         </div>
 
-        <button class="button" onclick="updateDate()">Select Date</button>
-
         <button
           class="button"
           id="toggleAreaButton"
-          onclick="toggleRegionArea()"
+          onclick="toggleRegionArea();"
         >
           Show Province Mode
         </button>
