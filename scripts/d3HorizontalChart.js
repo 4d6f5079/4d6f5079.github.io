@@ -116,10 +116,16 @@ function drawChart(data) {
     .append("rect")
     .attr("x", x(0) )
     .attr("y", function(d) { return y(getMode(d)); })
-    .attr("width", function(d) { return x(getCatWithUndefCheck(d)); })
+    .attr("width", function(d) { return 0; })
     .attr("height", y.bandwidth() )
     .attr("fill", "url(#bg-gradient)")
     .call(d3.helper.tooltip(function(d) {
         return getCatWithUndefCheck(d);
     }, false))
+    .transition()
+    .duration(750)
+    .delay(function (d, i) {
+        return i * 15;
+    })
+    .attr("width",  d => { return x(getCatWithUndefCheck(d)); })
 }
