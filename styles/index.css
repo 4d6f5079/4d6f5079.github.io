@@ -38,7 +38,7 @@ path {
 }
 
 #inputs-container {
-  box-shadow: 0px 2px 20px 1px #009de6;
+  box-shadow: 0px 0px 20px 1px #009de6;
   align-self: stretch;
   background: linear-gradient(to top, #00a8f6, #02c8da);
   border-radius: 2px;
@@ -53,8 +53,8 @@ path {
   display: flex;
   justify-content: space-evenly;
   align-items: center;
-  /* gap: 1px; */
-  flex-flow: row nowrap;
+  gap: 10px;
+  flex-flow: row wrap;
 }
 
 #viz-container {
