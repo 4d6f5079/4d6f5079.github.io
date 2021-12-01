@@ -35,6 +35,7 @@ path {
   justify-content: space-evenly;
   gap: 15px;
   align-items: center;
+  overflow-x: hidden;
 }
 
 #inputs-container {
