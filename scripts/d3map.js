@@ -31,7 +31,8 @@ let zoomActive = d3.select(null); // used for zooming and reset zoom
 const svg = d3.select(`#${mapDivId}`)
     .append("svg")
 	.attr("width", width)
-	.attr("height", height);
+	.attr("height", height)
+    .on("click", function() { return reset() });
 
 // Adjust projection based on scale and center of the map 
 const projection = d3.geoMercator()

@@ -1,9 +1,14 @@
 body {
-  background-color: #ffffff;
+  margin-top: 0px;
+  margin-left: 0px;
+  margin-right: 0px;
+  /* margin-bottom: 0px; */
+  background-color: #d1d1d1;
+  font-family: sans-serif;
 }
 
 svg {
-  background-color: #ffffff;
+  background-color: #d1d1d1;
 }
 
 path {
@@ -30,14 +35,33 @@ path {
   justify-content: space-evenly;
   gap: 15px;
   align-items: center;
+  overflow-x: hidden;
 }
 
 #inputs-container {
-  margin-top: 10px;
-  margin-bottom: 10px;
+  border: 1px solid #009de6;
+  box-shadow: 0px 0px 20px 1px #009de6;
+  align-self: stretch;
+  background: linear-gradient(to top, #00a8f6, #02c8da);
+  border-radius: 2px;
+  background-size: 200% auto;
+  padding-top: 5px;
+  padding-top: 5px;
+  padding-bottom: 10px;
+  top: 0; /* for sticky to work */
+  position: sticky; /* sticks the inputs to the top of the page when it has been scrolled */
+  margin-top: 0px;
+  margin-bottom: 5px;
   display: flex;
   justify-content: space-evenly;
   align-items: center;
+  gap: 10px;
+  flex-flow: row wrap;
+}
+
+#viz-container {
+  display: flex;
+  justify-content: space-evenly;
   gap: 25px;
   flex-flow: row wrap;
 }
@@ -46,23 +70,36 @@ path {
   font: 14px sans-serif;
 }
 
-#map-container {
-  float: left;
+#d3-map {
+  cursor: move; /* fallback if grab cursor is unsupported */
+  cursor: grab;
+  cursor: -moz-grab;
+  cursor: -webkit-grab;
 }
 
-#horizontal-chart-container {
-  float: right;
+/* Apply a "closed-hand" cursor during drag operation.*/
+#d3-map:active,
+#d3-map path:active {
+  cursor: pointer;
+  cursor: -moz-grabbing;
+  cursor: -webkit-grabbing;
 }
 
 #horizontal-chart {
-  width: 960px;
-  height: 470px;
+  margin-right: 5%;
+  width: 940px;
+  height: 520px;
   overflow-y: scroll;
 }
-
-#horizontalHeader {
-  margin-left: 150px;
+#xaxis {
+  margin-right: 5%;
 }
+#horizontalHeader {
+  text-align: center;
+  margin-left: 3%;
+  margin-right: 3%;
+}
+
 .tick text {
   fill: #000;
 }
@@ -74,9 +111,135 @@ path {
   shape-rendering: crispEdges;
 }
 
-/* Apply a "closed-hand" cursor during drag operation.*/
-.grabbable {
+/* DATE PICKER INPUT STYLING */
+input[type="date"] {
+  background: #4cb8c4;
+  margin-left: 5px;
+  width: 207px;
+  height: 35px;
+
+  padding: 5px;
+  font-family: sans-serif;
+  color: #000000;
+  font-size: 17px;
+  border: none;
+  outline: none;
+  border-radius: 2px;
+  box-shadow: 0px 2px 4px 1px #474747;
+  background-image: linear-gradient(
+    to right,
+    #4cb8c4 0%,
+    #3cd3ad 51%,
+    #4cb8c4 100%
+  );
+}
+
+/* INPUT STYLING FOR MOZILLA FIREFOX ONLY SINCE WIDTH IS DIFFERENT FOR DATE PICKER */
+@-moz-document url-prefix() {
+  input[type="date"] {
+    background: #4cb8c4;
+    box-shadow: 0px 2px 4px 1px #474747;
+    margin-left: 5px;
+    width: 255px;
+    height: 35px;
+    padding: 5px;
+    font-family: sans-serif;
+    color: #000000;
+    font-size: 17px;
+    border: none;
+    outline: none;
+    border-radius: 2px;
+    background-image: linear-gradient(
+      to right,
+      #4cb8c4 0%,
+      #3cd3ad 51%,
+      #4cb8c4 100%
+    );
+  }
+}
+
+input[type="date"]:active {
+  background-color: #3cd3ad;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
   cursor: pointer;
-  cursor: -moz-grabbing;
-  cursor: -webkit-grabbing;
+}
+
+/* BUTTON ANIMATIONS AND GRADIENT */
+.button {
+  background-image: linear-gradient(
+    to right,
+    #4cb8c4 0%,
+    #3cd3ad 51%,
+    #4cb8c4 100%
+  );
+}
+
+.button {
+  font-family: sans-serif;
+  padding: 15px 25px;
+  font-size: 17px;
+  text-align: center;
+  cursor: pointer;
+  outline: none;
+  transition: 0.5s;
+  color: rgb(0, 0, 0);
+  background-color: #04aa6d;
+  background-size: 200% auto;
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0px 2px 4px 1px #474747;
+  /* box-shadow: 1px 10px #00a8f6 1px; */
+  display: block;
+}
+
+.button:hover {
+  background-position: right center; /* change the direction of the change here */
+  color: rgb(0, 0, 0);
+  text-decoration: none;
+}
+
+.button:active {
+  /* background-color: #3e8e41; */
+  /* box-shadow: 0 3px #00e8fd; */
+  transform: translateY(1px);
+}
+
+/* SELECT DROPDOWN MENU STYLING */
+select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  box-shadow: 0px 2px 4px 1px #474747;
+  margin: 5px;
+  width: 300px;
+  height: 40px;
+  padding: 5px 35px 5px 8px;
+  font-size: 17px;
+  color: #000;
+  font-family: sans-serif;
+  border: 1px solid #28cbdd;
+  border-radius: 2px;
+  appearance: none;
+  background: url("data:image/svg+xml;utf8,<svg fill='black' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>")
+    100% / 15% no-repeat #3cd3ad;
+}
+
+/* select:focus {
+  border-color: #4cb8c4;
+  background-color: #3cd3ad;
+} */
+
+/* Internet Explorer hackery ahead */
+
+select::-ms-expand {
+  display: none; /* Remove default arrow in Internet Explorer 10 and 11 */
+}
+
+/* Target Internet Explorer 9 to undo the custom arrow */
+@media screen and (min-width: 0\0) {
+  select {
+    background: none\9;
+    padding: 5px\9;
+  }
 }

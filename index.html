@@ -13,42 +13,52 @@
     <div id="div-container">
       <!-- Top and Bottom -->
       <div id="inputs-container">
-        <div>
-          <label for="CoVid-19-date">CoVid-19 date:</label>
+        <div id="date-picker-container">
+          <label for="CoVid-19-date">Select date: </label>
           <input
             type="date"
             id="selectedDate"
             name="covid-period"
+            onchange="updateDate(this);"
             value="2021-01-06"
             min="2020-01-11"
             max="2021-11-18"
           />
         </div>
-        <button onclick="updateDate()">Select Date</button>
-        <button id="toggleAreaButton" onclick="toggleRegionArea()">
+
+        <button
+          class="button"
+          id="toggleAreaButton"
+          onclick="toggleRegionArea();"
+        >
           Show Province Mode
         </button>
-        <select
-          name="covid-category"
-          id="covid-category"
-          onchange="updateCategory();"
-        >
-          <option value="Covid-19 Infections">Covid-19 Infections</option>
-          <option value="Hospital Admissions">Hospital Admissions</option>
-          <option value="Deceased">Deceased</option>
-        </select>
+
+        <div id="category-selection-container">
+          <label>Select category: </label>
+          <select
+            name="covid-category"
+            id="covid-category"
+            onchange="updateCategory();"
+          >
+            <option value="Covid-19 Infections">Covid-19 Infections</option>
+            <option value="Hospital Admissions">Hospital Admissions</option>
+            <option value="Deceased">Deceased</option>
+          </select>
+        </div>
       </div>
 
-      <div id="map-container">
-        <div id="d3-map"></div>
-      </div>
+      <div id="viz-container">
+        <div id="map-container">
+          <div id="d3-map"></div>
+        </div>
 
-      <div id="horizontal-chart-container">
-        <h1 id="horizontalHeader"></h1>
-        <div id="horizontal-chart"></div>
-        <div id="xaxis"></div>
+        <div id="horizontal-chart-container">
+          <h1 id="horizontalHeader"></h1>
+          <div id="horizontal-chart"></div>
+          <div id="xaxis"></div>
+        </div>
       </div>
-      <!-- TODO: Add some more divs for other visualization types -->
     </div>
 
     <script src="https://d3js.org/d3.v5.js"></script>
