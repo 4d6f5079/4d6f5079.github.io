@@ -130,7 +130,7 @@ function mouseclicked(dataOfPath) {
         .duration(750)
         .call(zoom.transform, d3.zoomIdentity.translate(translate[0], translate[1]).scale(clickZoomScale));
 
-    drawLineChart(covidCumulative);
+    //drawLineChart(covidCumulative);
 }
 
 function zoomFunction() {
