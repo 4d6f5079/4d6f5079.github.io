@@ -1,10 +1,14 @@
 body {
-  background-color: #ffffff;
+  margin-top: 0px;
+  margin-left: 0px;
+  margin-right: 0px;
+  /* margin-bottom: 0px; */
+  background-color: #d1d1d1;
   font-family: sans-serif;
 }
 
 svg {
-  background-color: #ffffff;
+  background-color: #d1d1d1;
 }
 
 path {
@@ -34,9 +38,14 @@ path {
 }
 
 #inputs-container {
-  background-color: #ffffff;
+  box-shadow: 0px 2px 20px 1px #009de6;
+  align-self: stretch;
+  background: linear-gradient(to top, #00a8f6, #02c8da);
+  border-radius: 2px;
+  background-size: 200% auto;
   padding-top: 5px;
-  padding-bottom: 5px;
+  padding-top: 5px;
+  padding-bottom: 10px;
   top: 0; /* for sticky to work */
   position: sticky; /* sticks the inputs to the top of the page when it has been scrolled */
   margin-top: 0px;
@@ -44,8 +53,8 @@ path {
   display: flex;
   justify-content: space-evenly;
   align-items: center;
-  gap: 25px;
-  flex-flow: row wrap;
+  /* gap: 1px; */
+  flex-flow: row nowrap;
 }
 
 #viz-container {
@@ -114,6 +123,7 @@ input[type="date"] {
   border: none;
   outline: none;
   border-radius: 2px;
+  box-shadow: 0px 2px 4px 1px #474747;
   background-image: linear-gradient(
     to right,
     #4cb8c4 0%,
@@ -126,6 +136,7 @@ input[type="date"] {
 @-moz-document url-prefix() {
   input[type="date"] {
     background: #4cb8c4;
+    box-shadow: 0px 2px 4px 1px #474747;
     margin-left: 5px;
     width: 255px;
     height: 35px;
@@ -163,6 +174,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     #4cb8c4 100%
   );
 }
+
 .button {
   font-family: sans-serif;
   padding: 15px 25px;
@@ -176,7 +188,8 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   background-size: 200% auto;
   border: none;
   border-radius: 15px;
-  box-shadow: 0 3px rgb(255, 255, 255);
+  box-shadow: 0px 2px 4px 1px #474747;
+  /* box-shadow: 1px 10px #00a8f6 1px; */
   display: block;
 }
 
@@ -188,7 +201,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
 .button:active {
   /* background-color: #3e8e41; */
-  box-shadow: 0 3px #666;
+  /* box-shadow: 0 3px #00e8fd; */
   transform: translateY(1px);
 }
 
@@ -196,6 +209,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 select {
   -webkit-appearance: none;
   -moz-appearance: none;
+  box-shadow: 0px 2px 4px 1px #474747;
   margin: 5px;
   width: 300px;
   height: 40px;
