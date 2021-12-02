@@ -58,7 +58,23 @@ function initLegend() {
                 (municipalityMode ? hospital_admission_ranges_municipalities : hospital_admission_ranges_provinces) : 
                 (municipalityMode ? deceased_ranges_municipalities : deceased_ranges_provinces);
 
-    const legend = setupLegend(colors, svg);
+    const legend = svg.append("g")
+    .attr('class', 'legend')
+    .attr('width', 148)
+    .attr('height', 148)
+    .selectAll('g')
+    .data(colors)
+    .enter().append('g')
+    .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
+    legend.append("rect")
+    //that's 18px wide
+    .attr("width", 18)
+    //and 18px high
+    .attr("height", 18)
+    //then fill it will the color assigned by the scale
+    .style("fill", function(d) {
+        return d;
+    });
 
     legend.append("text")
         .attr("x", 24)
