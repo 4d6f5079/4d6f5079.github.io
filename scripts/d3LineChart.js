@@ -96,14 +96,9 @@ function drawLineChart(allCovidData) {
     .text(yAxisLabel);
 
   const lineGenerator = d3.line()
-    .x(d => {
-      console.log("X value", xValue(d));
-      xScale(xValue(d));
-    })
-    .y(d => {
-      console.log("Y value", yValue(d));
-      yScale(yValue(d));
-    });
+    .x(d => xScale(xValue(d)))
+    .y(d => yScale(yValue(d)))
+    .curve(d3.curveMonotoneY);
 
   g.append("path")
     .datum(result)
