@@ -1,7 +1,6 @@
 var municipalitiesJson;
 var covidCumulative;
 var provinceJson;
-var isBar;
 
 Promise.all([
     d3.json("../data/municipalities.geojson"),
@@ -12,7 +11,6 @@ Promise.all([
     municipalitiesJson = allData[0];
     provinceJson = allData[1];
     covidCumulative = allData[2];
-    isBar = true;
 
     document.getElementById("selectedDate").min = formatDate(new Date(covidCumulative[0].Date_of_report));
     document.getElementById("selectedDate").max = formatDate(new Date(covidCumulative[covidCumulative.length - 1].Date_of_report));
@@ -21,5 +19,5 @@ Promise.all([
 
     // CALL FUNCTION TO DRAW THE MAP
     drawMap(data);
-    drawChart(data, isBar);
+    drawHorizontalBarChart(data);
 });

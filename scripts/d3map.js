@@ -58,23 +58,7 @@ function initLegend() {
                 (municipalityMode ? hospital_admission_ranges_municipalities : hospital_admission_ranges_provinces) : 
                 (municipalityMode ? deceased_ranges_municipalities : deceased_ranges_provinces);
 
-    const legend = svg.append("g")
-        .attr('class', 'legend')
-        .attr('width', 148)
-        .attr('height', 148)
-        .selectAll('g')
-        .data(colors)
-        .enter().append('g')
-        .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
-        legend.append("rect")
-        //that's 18px wide
-        .attr("width", 18)
-        //and 18px high
-        .attr("height", 18)
-        //then fill it will the color assigned by the scale
-        .style("fill", function(d) {
-            return d;
-        });
+    const legend = setupLegend(colors, svg);
 
     legend.append("text")
         .attr("x", 24)
@@ -99,7 +83,8 @@ function reset() {
 function mouseclicked(dataOfPath) {  
     if (zoomActive.node() === this) return reset();
     zoomActive = d3.select(this);
-    
+
+    drawPieChart(getCategoriesOf(dataOfPath), getMode(dataOfPath));
     d3.event.stopPropagation();
 
     var bounds = path.bounds(dataOfPath);
@@ -187,30 +172,12 @@ function groupByValueAndSum(data) {
 
     data.reduce((res, value) => {
         if (!res[value.Province]) {
-
-            if (selectedCategory === "Covid-19 Infections") {
-                res[value.Province] = { Province: value.Province,  Total_reported: 0 };
-            } else if (selectedCategory === "Hospital Admissions") {
-                res[value.Province] = { Province: value.Province,  Hospital_admission: 0 };
-            } else if (selectedCategory === "Deceased") {
-                res[value.Province] = { Province: value.Province,  Deceased: 0 };
-            } else {
-                console.warn(`Selected category= ${selectedCategory}. Not found when grouping and summing.`)
-            }
-            
+            res[value.Province] = { Province: value.Province,  Total_reported: 0, Hospital_admission: 0, Deceased: 0};
             result.push(res[value.Province])
         }
-
-        if (selectedCategory === "Covid-19 Infections") {
-            res[value.Province].Total_reported += +value.Total_reported;
-        } else if (selectedCategory === "Hospital Admissions") {
-            res[value.Province].Hospital_admission += +value.Hospital_admission;
-        } else if (selectedCategory === "Deceased") {
-            res[value.Province].Deceased += +value.Deceased;
-        } else {
-            console.warn(`Selected category = ${selectedCategory}. Summing went wrong.`)
-        }
-
+        res[value.Province].Total_reported += +value.Total_reported;
+        res[value.Province].Hospital_admission += +value.Hospital_admission;
+        res[value.Province].Deceased += +value.Deceased;
         return res;
     }, {})
 
@@ -261,6 +228,14 @@ function joinMapCovidCumulativeData(mapData, covidData) {
     });
 }
 
+function getCategoriesOf(locationData) {
+    const covidD = locationData.properties[covidObjectKey];
+    if (covidD !== undefined) {
+        return [+covidD.Total_reported, +covidD.Hospital_admission, +covidD.Deceased];
+    } else {
+        return undefined;
+    }
+}
 function fillLocations(d) {
     const covidD = d.properties[covidObjectKey];
     if (covidD !== undefined) {

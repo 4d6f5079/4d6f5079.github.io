@@ -1,24 +1,20 @@
+function removePieChart() {
+    if (d3.select(`g${pieLegendClassName}`)) d3.select(`g${pieLegendClassName}`).remove();
+    if (d3.select("svg.pie")) d3.select("svg.pie").remove();
+    pieHeader.innerText = "";
+}
 function updateDate(dateObject) {
     if (!municipalitiesJson && !provinceJson && !covidCumulative) return;
 
     selectedDate = dateObject.value;
     
     const data = municipalityCheck();
+    removePieChart();
     drawMap(data);
-    drawChart(data, isBar);
+    drawHorizontalBarChart(data);
+
 }
 
-function toPie() {
-    const data = municipalityCheck();
-    isBar = false;
-    drawChart(data, isBar);
-}
-
-function toBar() {
-    const data = municipalityCheck();
-    isBar = true;
-    drawChart(data, isBar);
-}
 
 function updateCategory() {
     if (!municipalitiesJson && !provinceJson && !covidCumulative) return;
@@ -26,8 +22,9 @@ function updateCategory() {
     selectedCategory = document.getElementById("covid-category").value;
 
     const data = municipalityCheck();
+    removePieChart();
     drawMap(data);
-    drawChart(data, isBar);
+    drawHorizontalBarChart(data);
 }
 
 function toggleRegionArea() {
@@ -42,8 +39,9 @@ function toggleRegionArea() {
     }
     
     const data = municipalityCheck();
+    removePieChart();
     drawMap(data);
-    drawChart(data, isBar);
+    drawHorizontalBarChart(data);
 }
 
 
