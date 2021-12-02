@@ -60,13 +60,10 @@ path {
 
 #viz-container {
   display: flex;
+  flex: 1 0 50%;
   justify-content: space-evenly;
   gap: 25px;
   flex-flow: row wrap;
-}
-
-.axis {
-  font: 14px sans-serif;
 }
 
 #d3-map {
@@ -90,13 +87,31 @@ path {
   height: 520px;
   overflow-y: scroll;
 }
+
 #xaxis {
   margin-right: 5%;
 }
+
 #horizontalHeader {
   text-align: center;
   margin-left: 3%;
   margin-right: 3%;
+}
+
+.near-button-text {
+  font-weight: bold;
+}
+
+.flex-buttons-with-near-text {
+  display: flex;
+  gap: 5px;
+  justify-content: center;
+  align-items: center;
+  flex-flow: column wrap;
+}
+
+.axis {
+  font: 14px sans-serif;
 }
 
 .tick text {
