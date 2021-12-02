@@ -33,10 +33,13 @@ function drawLineChart(allCovidData) {
     });
   });
 
-  console.log('before');
-  setTimeout(function(){
-      console.log('after');
-  },5000);
+
+  // result = [
+  //   { date: "2020-03-14 10:00:00", value: 1000 },
+  //   { date: "2020-03-15 10:00:00", value: 1200 },
+  //   {date: "2020-03-16 10:00:00", value: 1500}
+  // ];
+
 
 
   console.log("Result place data", result);
@@ -94,12 +97,12 @@ function drawLineChart(allCovidData) {
 
   const lineGenerator = d3.line()
     .x(d => {
-      console.log("X value", xScale(xValue(d)));
-      xScale(xValue(d))
+      console.log("X value", xValue(d));
+      xScale(xValue(d));
     })
     .y(d => {
-      console.log("Y value", yScale(yValue(d)));
-      yScale(yValue(d))
+      console.log("Y value", yValue(d));
+      yScale(yValue(d));
     });
 
   g.append("path")
