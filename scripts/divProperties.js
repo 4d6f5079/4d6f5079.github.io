@@ -5,7 +5,19 @@ function updateDate(dateObject) {
     
     const data = municipalityCheck();
     drawMap(data);
-    drawChart(data);
+    drawChart(data, isBar);
+}
+
+function toPie() {
+    const data = municipalityCheck();
+    isBar = false;
+    drawChart(data, isBar);
+}
+
+function toBar() {
+    const data = municipalityCheck();
+    isBar = true;
+    drawChart(data, isBar);
 }
 
 function updateCategory() {
@@ -15,7 +27,7 @@ function updateCategory() {
 
     const data = municipalityCheck();
     drawMap(data);
-    drawChart(data);
+    drawChart(data, isBar);
 }
 
 function toggleRegionArea() {
@@ -31,7 +43,7 @@ function toggleRegionArea() {
     
     const data = municipalityCheck();
     drawMap(data);
-    drawChart(data);
+    drawChart(data, isBar);
 }
 
 
