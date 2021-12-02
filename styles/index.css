@@ -92,10 +92,15 @@ path {
   margin-right: 5%;
 }
 
-#horizontalHeader {
+.align-text-center-bar-chart {
   text-align: center;
   margin-left: 3%;
   margin-right: 3%;
+}
+
+.align-text-center-pie-chart {
+  text-align: center;
+  margin-right: 10%;
 }
 
 .near-button-text {
