@@ -2,7 +2,7 @@
 
 const widthLineChart = 750;
 const heightLineChart = 750;
-const svgId = "line-chart-id";
+const svgId = "line-chart";
 
 function makeTitle() {
 
@@ -24,49 +24,42 @@ function drawLineChart(allCovidData) {
     return obj.Province === selectedPlace;
   });
 
-  result = []
-  singlePlaceData.forEach(obj => {
-    result.push({
-      "date": obj.Date_of_report,
-      // Changle to selected chategory
-      "value": obj.Deceased
-    });
-  });
 
+  console.log("Single place data", singlePlaceData);
 
-  // result = [
-  //   { date: "2020-03-14 10:00:00", value: 1000 },
-  //   { date: "2020-03-15 10:00:00", value: 1200 },
-  //   {date: "2020-03-16 10:00:00", value: 1500}
-  // ];
-
-
-
-  console.log("Result place data", result);
 
   const title = makeTitle;
 
-  const xValue = d => parseDate(d.date);
-  const yValue = d => d.value;
+  const xValue = d => parseDate(d.Date_of_report);
+  //const yValue = d => +d.Deceased;
+  
+  var yValue = d => +d.Total_reported;
+  if (selectedCategory === "Covid-19 Infections") {
+    yValue = d => +d.Total_reported;
+    
+  } else if(selectedCategory === "Hospital Admissions") {
+    yValue = d => +d.Hospital_admission;
+    
+  } else {
+
+    yValue = d => +d.Deceased;
+  
+  }
+
 
   const xAxisLabel = "Date";
   const yAxisLabel = "Make Label...";
-
-
-  // TODO: Change to selected category
-
-
 
   const margin = { top: 15, right: 35, bottom: 35, left: 35 };
   const widthL = widthLineChart - margin.left - margin.right;
   const heightL = heightLineChart - margin.top - margin.bottom;
 
   const xScale = d3.scaleTime()
-    .domain(d3.extent(result, xValue))
-    .range([0, width]);
+    .domain(d3.extent(singlePlaceData, xValue))
+    .range([0, widthL]);
 
   const yScale = d3.scaleLinear()
-    .domain([0, d3.max(result, yValue)])
+    .domain([0, d3.max(singlePlaceData, yValue)])
     .range([heightL, 0]);
 
   const svg = d3.select("#line-chart")
@@ -81,13 +74,12 @@ function drawLineChart(allCovidData) {
 
   const xAxis = d3.axisBottom(xScale)
 
-  const yAxis = d3.axisLeft(yScale)
+  const yAxis = d3.axisLeft(yScale);
 
   const xAxisWithG = g.append("g").call(xAxis)
     .attr("transform", `translate(0, ${heightL})`);
 
   const yAxisWithG = g.append("g").call(yAxis);
-
 
   xAxisWithG.append("text")
     .text(xAxisLabel);
@@ -101,78 +93,13 @@ function drawLineChart(allCovidData) {
     .curve(d3.curveMonotoneY);
 
   g.append("path")
-    .datum(result)
+    .datum(singlePlaceData)
     .attr("fill", "none")
-    .attr("stroke", "steelblue")
-    .attr("d", lineGenerator(result));
-
-  // svg.append("path")
-  //   .datum(result)
-  //   .attr("fill", "none")
-  //   .attr("stroke", "steelblue")
-  //   .attr("stroke-width", 1.5)
-  //   .attr("d", lineGenerator);
+    .attr("stroke", "green")
+    .attr("d", lineGenerator(singlePlaceData));
 
   g.append('text')
     .text(title);
-
-  // ============================================================================
-
-  // // console.log("Selected catagory is ", selectedCategory);
-  // // console.log("Selected place is ", selectedPlace);
-
-  // const margin = {top: 15, right: 35, bottom: 20, left: 35};
-  // const widthL = widthLineChart - margin.left - margin.right;
-  // const heightL = heightLineChart - margin.top - margin.bottom;
-
-  // const svg = d3.select("#line-chart")
-  //     .append("svg")
-  //     .attr("id", svgId)
-  //     .attr("width", widthLineChart)
-  //     .attr("height", heightLineChart)
-  //     .append("g")
-  //     .attr("transform", `translate(${margin.left}, ${margin.top})`);
-
-  // // Making x and y axis to append to add to svg
-  // const x = d3.scaleTime()
-  //   .range([0, widthL])
-  //   .domain(d3.extent(
-  //     singlePlaceData,
-  //     function(d) { return parseDate(d.Date_of_report) }
-  //   )); // Taking only the date with substring
-
-  // const y = d3.scaleLinear()
-  //   .range([heightL, 0])  
-  //   .domain([0, d3.max(singlePlaceData, function(d) { +d.Deceased })]);
-
-  // const line = d3.line()
-  //   .x(function(d) { 
-  //     //console.log("X value:", parseDate(d.Date_of_report));
-  //     return x(parseDate(d.Date_of_report));
-  //   }) // set the x values for the line generator
-  //   .y(function (d) {
-  //     //console.log("Y value:", +d.Deceased);
-  //     return y(+d.Deceased);
-  //   }) // set the y values for the line generator
-  //   .curve(d3.curveLinear); // apply smoothing to the line
-
-  // // Add x and y axis
-  // svg.append("g")
-  //    .attr("transform", `translate(0, ${heightL})`)
-  //    .call(d3.axisBottom(x));
-
-  // svg.append("g")
-  //    .call(d3.axisLeft(y));
-
-  // svg.append("path")
-  //    .datum(result)
-  //    .attr("fill", "none")
-  //    .attr("stroke", "steelblue")
-  //    .attr("stroke-width", 1.5)
-  //    .attr("d", line)
-  // // selectedDate = document.getElementById("selectedDate").value;
-
-  // // const data = municipalityCheck();
 
 }
 

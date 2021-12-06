@@ -58,7 +58,7 @@ path {
   flex-flow: row wrap;
 }
 
-#viz-container {
+.viz-container {
   display: flex;
   justify-content: space-evenly;
   gap: 25px;
@@ -97,6 +97,10 @@ path {
   text-align: center;
   margin-left: 3%;
   margin-right: 3%;
+}
+
+#line-chart-container {
+  margin-right: 350px;
 }
 
 .tick text {
