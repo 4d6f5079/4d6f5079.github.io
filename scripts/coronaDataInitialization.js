@@ -2,7 +2,6 @@ var municipalitiesJson;
 var covidCumulative;
 var provinceJson;
 
-
 Promise.all([
     d3.json("../data/municipalities.geojson"),
     d3.json("../data/province.geojson"),
@@ -21,6 +20,5 @@ Promise.all([
 
     // CALL FUNCTION TO DRAW THE MAP
     drawMap(data);
-    drawChart(data);
-    drawLineChart(covidCumulative);
+    drawHorizontalBarChart(data);
 });

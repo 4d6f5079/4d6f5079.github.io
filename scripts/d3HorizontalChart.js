@@ -17,13 +17,14 @@ function getCatWithUndefCheck(d) {
         const category = getCategory(covidD);
         return category;
     } else {
-        return 0;
+        return undefined;
     }
 }
 
-function drawChart(data) {
+function drawHorizontalBarChart(data) {
     if (d3.select("svg.chart")) d3.select("svg.chart").remove();
     if (d3.select("svg.x-axis")) d3.select("svg.x-axis").remove();
+
     // set title 
     horizontalHeader.innerText = getTitleText()
     // set the dimensions and margins of the graph
@@ -116,10 +117,16 @@ function drawChart(data) {
     .append("rect")
     .attr("x", x(0) )
     .attr("y", function(d) { return y(getMode(d)); })
-    .attr("width", function(d) { return x(getCatWithUndefCheck(d)); })
+    .attr("width", function(d) { return 0; })
     .attr("height", y.bandwidth() )
     .attr("fill", "url(#bg-gradient)")
     .call(d3.helper.tooltip(function(d) {
         return getCatWithUndefCheck(d);
     }, false))
+    .transition()
+    .duration(750)
+    .delay(function (d, i) {
+        return i * 15;
+    })
+    .attr("width",  d => { return x(getCatWithUndefCheck(d)); })
 }

@@ -1,14 +1,17 @@
-function updateDate() {
+function updateDate(dateObject) {
     if (!municipalitiesJson && !provinceJson && !covidCumulative) return;
 
-    selectedDate = document.getElementById("selectedDate").value;
+    selectedDate = dateObject.value;
     
     const data = municipalityCheck();
     
     // Line chart is not redrawn as it ranges over all dates
+    removePieChart();
     drawMap(data);
-    drawChart(data);
+    drawHorizontalBarChart(data);
+
 }
+
 
 function updateCategory() {
     if (!municipalitiesJson && !provinceJson && !covidCumulative) return;
@@ -16,10 +19,9 @@ function updateCategory() {
     selectedCategory = document.getElementById("covid-category").value;
 
     const data = municipalityCheck();
-    
-    // Redraw the map and charts
+    removePieChart();
     drawMap(data);
-    drawChart(data);
+    drawHorizontalBarChart(data);
     drawLineChart(covidCumulative);
 }
 
@@ -35,6 +37,9 @@ function toggleRegionArea() {
     }
     
     const data = municipalityCheck();
+    removePieChart();
     drawMap(data);
-    drawChart(data);
+    drawHorizontalBarChart(data);
 }
+
+
