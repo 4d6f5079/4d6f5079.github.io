@@ -21,36 +21,32 @@ function drawLineChart(allCovidData) {
     if (municipalityMode) {
       return obj.Municipality_name === selectedPlace;
     }
-    return obj.Province === selectedPlace;
+
+    console.log("Selected Municipality:", obj.Municipality);
+    return obj.Municipality === "" && obj.Province === selectedPlace;
   });
 
 
-  console.log("Single place data", singlePlaceData);
+  console.log("allCovidData  data", allCovidData);
 
 
   const title = makeTitle;
 
   const xValue = d => parseDate(d.Date_of_report);
-  //const yValue = d => +d.Deceased;
-  
   var yValue = d => +d.Total_reported;
   if (selectedCategory === "Covid-19 Infections") {
     yValue = d => +d.Total_reported;
-    
   } else if(selectedCategory === "Hospital Admissions") {
     yValue = d => +d.Hospital_admission;
-    
   } else {
-
     yValue = d => +d.Deceased;
-  
   }
 
 
   const xAxisLabel = "Date";
   const yAxisLabel = "Make Label...";
 
-  const margin = { top: 15, right: 35, bottom: 35, left: 35 };
+  const margin = {top: 15, right: 45, bottom: 35, left: 45};
   const widthL = widthLineChart - margin.left - margin.right;
   const heightL = heightLineChart - margin.top - margin.bottom;
 
@@ -87,16 +83,15 @@ function drawLineChart(allCovidData) {
   yAxisWithG.append("text")
     .text(yAxisLabel);
 
-  const lineGenerator = d3.line()
-    .x(d => xScale(xValue(d)))
-    .y(d => yScale(yValue(d)))
-    .curve(d3.curveMonotoneY);
-
   g.append("path")
     .datum(singlePlaceData)
     .attr("fill", "none")
     .attr("stroke", "green")
-    .attr("d", lineGenerator(singlePlaceData));
+    .attr("d", d3.line()
+      .x(d => xScale(xValue(d)))
+      .y(d => yScale(yValue(d)))
+      .curve(d3.curveMonotoneY)
+    );
 
   g.append('text')
     .text(title);
