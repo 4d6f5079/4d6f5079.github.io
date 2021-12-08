@@ -40,7 +40,7 @@ function toggleRegionArea() {
     removePieChart();
     drawMap(data);
     drawHorizontalBarChart(data);
-    drawLineChart(covidCumulative);
+    removeLineChart()
 }
 
 

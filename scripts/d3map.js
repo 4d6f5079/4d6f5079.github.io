@@ -96,9 +96,18 @@ function reset() {
 }
 
 function mouseclicked(dataOfPath) {  
-    selectedPlace = selectedPlace === undefined ? dataOfPath.properties.areaName : 
+    if(municipalityMode) {
+        selectedPlace = selectedPlace === undefined ? dataOfPath.properties.areaName : 
         selectedPlace === dataOfPath.properties.areaName ? null : dataOfPath.properties.areaName;
+    } else {
+        selectedPlace = selectedPlace === undefined ? dataOfPath.properties.name : 
+        selectedPlace === dataOfPath.properties.name ? null : dataOfPath.properties.name;
+    }
+
     
+    
+
+
     // TODO: keep place selected by keeping blue stroke
     // if(selectedPlace) {
     //     d3.select(this)

@@ -8,6 +8,10 @@ function makeTitle() {
 
 }
 
+function removeLineChart() {
+  d3.select(`svg#${svgId}`).remove();
+}
+
 // parses date string with given format to a Date object
 const parseDate = d3.timeParse("%Y-%m-%d %I:%M:%S");
 
@@ -22,31 +26,34 @@ function drawLineChart(allCovidData) {
       return obj.Municipality_name === selectedPlace;
     }
 
-    console.log("Selected Municipality:", obj.Municipality);
-    return obj.Municipality === "" && obj.Province === selectedPlace;
+    //console.log("Selected Municipality:", obj.Municipality);
+    return (obj.Municipality_name === "" && obj.Province === selectedPlace);
   });
 
 
-  console.log("allCovidData  data", allCovidData);
-
+  console.log("singlePlaceData data", singlePlaceData);
 
   const title = makeTitle;
+  var categoryColor = "#ec5353";
 
   const xValue = d => parseDate(d.Date_of_report);
   var yValue = d => +d.Total_reported;
   if (selectedCategory === "Covid-19 Infections") {
     yValue = d => +d.Total_reported;
+    categoryColor = "#ec5353";
   } else if(selectedCategory === "Hospital Admissions") {
     yValue = d => +d.Hospital_admission;
+    categoryColor = "#0d2bfc";
   } else {
     yValue = d => +d.Deceased;
+    categoryColor = "#217d12";
   }
 
 
   const xAxisLabel = "Date";
   const yAxisLabel = "Make Label...";
 
-  const margin = {top: 15, right: 45, bottom: 35, left: 45};
+  const margin = {top: 15, right: 55, bottom: 35, left: 55};
   const widthL = widthLineChart - margin.left - margin.right;
   const heightL = heightLineChart - margin.top - margin.bottom;
 
@@ -83,15 +90,46 @@ function drawLineChart(allCovidData) {
   yAxisWithG.append("text")
     .text(yAxisLabel);
 
-  g.append("path")
-    .datum(singlePlaceData)
-    .attr("fill", "none")
-    .attr("stroke", "green")
-    .attr("d", d3.line()
-      .x(d => xScale(xValue(d)))
-      .y(d => yScale(yValue(d)))
-      .curve(d3.curveMonotoneY)
-    );
+  
+  const path = g.append("path")
+  .datum(singlePlaceData)
+  .attr("fill", "none")
+  .style("stroke", categoryColor)
+  .style("stroke-width", "3px")
+  .attr("d", d3.line()
+    .x(d => xScale(xValue(d)))
+    .y(d => yScale(yValue(d)))
+    //.curve(d3.curveMonotoneY)
+    .curve(d3.curveBasis)
+  );
+
+  const totalLength = path.node().getTotalLength();
+
+  path.attr("stroke-dasharray", totalLength)
+      .attr("stroke-dashoffset", totalLength)
+      .transition()
+      .duration(1000)
+      .ease(d3.easeLinear)
+      .attr("stroke-dashoffset", 0); 
+
+  //console.log("total length:", totalLength);
+
+  // path.select("line-for-animation")
+
+
+  // d3.select(path[0][0])
+  // .transition()
+  // .duration(5000)
+  // .ease(d3.easeLinear)
+  // .attr("stroke-dashoffset", 0);
+
+
+
+
+  // g.select("path")
+  // .transition()
+  // .duration(5000)
+  // .ease(d3.easeLinear);
 
   g.append('text')
     .text(title);
