@@ -19,6 +19,7 @@ function updateCategory() {
     const data = municipalityCheck();
     drawMap(data);
     drawHorizontalBarChart(data);
+    drawLineChart(covidCumulative);
 }
 
 function toggleRegionArea() {
