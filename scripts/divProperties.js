@@ -6,10 +6,8 @@ function updateDate(dateObject) {
     const data = municipalityCheck();
     
     // Line chart is not redrawn as it ranges over all dates
-    removePieChart();
     drawMap(data);
     drawHorizontalBarChart(data);
-
 }
 
 
@@ -19,10 +17,8 @@ function updateCategory() {
     selectedCategory = document.getElementById("covid-category").value;
 
     const data = municipalityCheck();
-    removePieChart();
     drawMap(data);
     drawHorizontalBarChart(data);
-    drawLineChart(covidCumulative);
 }
 
 function toggleRegionArea() {
@@ -37,10 +33,8 @@ function toggleRegionArea() {
     }
     
     const data = municipalityCheck();
-    removePieChart();
     drawMap(data);
     drawHorizontalBarChart(data);
-    removeLineChart()
 }
 
 
