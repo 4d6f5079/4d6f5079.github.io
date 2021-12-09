@@ -1,15 +1,14 @@
 * {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: sans-serif;
 }
 
 body {
-  margin-top: 0px;
-  margin-left: 0px;
-  margin-right: 0px;
-  /* margin-bottom: 0px; */
   background-color: #d1d1d1;
-  font-family: sans-serif;
   overflow-x: hidden;
 }
 
@@ -77,6 +76,10 @@ path {
   cursor: -webkit-grab;
 }
 
+#map-container {
+  margin-top: 3px;
+}
+
 /* Apply a "closed-hand" cursor during drag operation.*/
 #d3-map:active,
 #d3-map path:active {
@@ -100,11 +103,16 @@ path {
   text-align: center;
   margin-left: 3%;
   margin-right: 3%;
+  margin-bottom: 3%;
+  margin-top: 3px;
 }
 
 .align-text-center-pie-chart {
   text-align: center;
   margin-right: 10%;
+  margin-left: 10%;
+  margin-bottom: 5px;
+  margin-top: 5px;
 }
 
 .near-button-text {
