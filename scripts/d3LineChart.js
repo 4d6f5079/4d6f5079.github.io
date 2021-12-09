@@ -22,18 +22,14 @@ function drawLineChart(allCovidData) {
     if (municipalityMode) {
       return obj.Municipality_name === selectedPlace;
     }
-
-    //console.log("Selected Municipality:", obj.Municipality);
     return (obj.Municipality_name === "" && obj.Province === selectedPlace);
   });
-
-
-  console.log("singlePlaceData data", singlePlaceData);
 
   var categoryColor = "";
   var yAxisLabel = "";
   var title = "";
 
+  // Functions to select needed data
   const xValue = d => parseDate(d.Date_of_report);
   var yValue = d => +d.Total_reported;
   if (selectedCategory === "Covid-19 Infections") {
@@ -53,11 +49,12 @@ function drawLineChart(allCovidData) {
     title = `Deceased in ${selectedPlace}`;
   }
 
-
-  const margin = {top: 15, right: 55, bottom: 150, left: 80};
+  // Setting value to possition line chart
+  const margin = {top: 15, right: 55, bottom: 150, left: 90};
   const widthL = widthLineChart - margin.left - margin.right;
   const heightL = heightLineChart - margin.top - margin.bottom;
 
+  // Defining xScale and yScale to be used with the line chart axis
   const xScale = d3.scaleTime()
     .domain(d3.extent(singlePlaceData, xValue))
     .range([0, widthL]);
@@ -66,6 +63,7 @@ function drawLineChart(allCovidData) {
     .domain([0, d3.max(singlePlaceData, yValue)])
     .range([heightL, 0]);
 
+  // Appending svg to contain the chart
   const svg = d3.select("#line-chart")
     .append("svg")
     .attr("id", svgId)
@@ -76,10 +74,12 @@ function drawLineChart(allCovidData) {
   const g = svg.append("g")
     .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
+  // Constructing the x and y axis with the Scale for each
   const xAxis = d3.axisBottom(xScale)
 
   const yAxis = d3.axisLeft(yScale);
 
+  // Append g tag for the line chart axis
   const xAxisWithG = g.append("g").call(xAxis)
     .attr("transform", `translate(0, ${heightL})`)
     .attr("class", "axis-values");
@@ -87,40 +87,24 @@ function drawLineChart(allCovidData) {
   const yAxisWithG = g.append("g").call(yAxis)
     .attr("class", "axis-values");
 
+  // Giving a title to the line chart
   const header = d3.select("#lineChartHeader").html(title);
-
-  // xAxisWithG.append("text")
-  //   .attr("class", "label-axis")
-  //   .attr("x",  500)
-  //   .attr("y", heightLineChart + margin.bottom)
-  //   .text("Date");
-
-  // yAxisWithG.append("text")
-  //   .attr("class", "label-axis")
-  //   .attr("x",  -widthLineChart / 2)
-  //   .attr("y", -1 * (heightLineChart + margin.bottom))
-  //   .text("Date");
-
     
+  // Appending x axis label
   svg.append("text")
   .attr("class", "line-chart-label-axis")
-  .attr("transform", "translate(420, 655)")
+  .attr("transform", "translate(427, 655)")
   .style("text-anchor", "middle")
   .text("Date");
 
+  // Appending y axis label
   svg.append("text")
   .attr("class", "line-chart-label-axis")
   .style("text-anchor", "middle")
   .attr("transform", "translate(20, 300) rotate(-90)")
   .text(yAxisLabel);
-
-  // svg.append("text")
-  // .attr("id", "line-chart-title")
-  // .attr("x", 455)
-  // .attr("y", 32)
-  // .style("text-anchor", "middle")
-  // .text(title);
   
+  // Appending path to draw the line using the xScale and yScale
   const path = g.append("path")
   .datum(singlePlaceData)
   .attr("fill", "none")
@@ -129,12 +113,13 @@ function drawLineChart(allCovidData) {
   .attr("d", d3.line()
     .x(d => xScale(xValue(d)))
     .y(d => yScale(yValue(d)))
-    //.curve(d3.curveMonotoneY)
     .curve(d3.curveBasis)
   );
 
+  // Calculating path length for animated drawing of the line
   const totalLength = path.node().getTotalLength();
 
+  // Animated drawing of the line in the chart 
   path.attr("stroke-dasharray", totalLength)
       .attr("stroke-dashoffset", totalLength)
       .transition()
