@@ -1,15 +1,12 @@
 // used in mouseclicked in d3Map.js and coronaDataInitialion.js
 
-const widthLineChart = 750;
+const widthLineChart = 850;
 const heightLineChart = 750;
 const svgId = "line-chart";
 
-function makeTitle() {
-
-}
-
 function removeLineChart() {
   d3.select(`svg#${svgId}`).remove();
+  d3.select("#lineChartHeader").html("");
 }
 
 // parses date string with given format to a Date object
@@ -33,27 +30,31 @@ function drawLineChart(allCovidData) {
 
   console.log("singlePlaceData data", singlePlaceData);
 
-  const title = makeTitle;
-  var categoryColor = "#ec5353";
+  var categoryColor = "";
+  var yAxisLabel = "";
+  var title = "";
 
   const xValue = d => parseDate(d.Date_of_report);
   var yValue = d => +d.Total_reported;
   if (selectedCategory === "Covid-19 Infections") {
     yValue = d => +d.Total_reported;
     categoryColor = "#ec5353";
+    yAxisLabel = "Infected";
+    title = `Covid-19 Infections in ${selectedPlace}`;
   } else if(selectedCategory === "Hospital Admissions") {
     yValue = d => +d.Hospital_admission;
     categoryColor = "#0d2bfc";
+    yAxisLabel = "Hospitalized";
+    title = `Hospital Admissions in ${selectedPlace}`;
   } else {
     yValue = d => +d.Deceased;
     categoryColor = "#217d12";
+    yAxisLabel = "Deceased";
+    title = `Deceased in ${selectedPlace}`;
   }
 
 
-  const xAxisLabel = "Date";
-  const yAxisLabel = "Make Label...";
-
-  const margin = {top: 15, right: 55, bottom: 35, left: 55};
+  const margin = {top: 15, right: 55, bottom: 150, left: 80};
   const widthL = widthLineChart - margin.left - margin.right;
   const heightL = heightLineChart - margin.top - margin.bottom;
 
@@ -80,16 +81,45 @@ function drawLineChart(allCovidData) {
   const yAxis = d3.axisLeft(yScale);
 
   const xAxisWithG = g.append("g").call(xAxis)
-    .attr("transform", `translate(0, ${heightL})`);
+    .attr("transform", `translate(0, ${heightL})`)
+    .attr("class", "axis-values");
 
-  const yAxisWithG = g.append("g").call(yAxis);
+  const yAxisWithG = g.append("g").call(yAxis)
+    .attr("class", "axis-values");
 
-  xAxisWithG.append("text")
-    .text(xAxisLabel);
+  const header = d3.select("#lineChartHeader").html(title);
 
-  yAxisWithG.append("text")
-    .text(yAxisLabel);
+  // xAxisWithG.append("text")
+  //   .attr("class", "label-axis")
+  //   .attr("x",  500)
+  //   .attr("y", heightLineChart + margin.bottom)
+  //   .text("Date");
 
+  // yAxisWithG.append("text")
+  //   .attr("class", "label-axis")
+  //   .attr("x",  -widthLineChart / 2)
+  //   .attr("y", -1 * (heightLineChart + margin.bottom))
+  //   .text("Date");
+
+    
+  svg.append("text")
+  .attr("class", "line-chart-label-axis")
+  .attr("transform", "translate(420, 655)")
+  .style("text-anchor", "middle")
+  .text("Date");
+
+  svg.append("text")
+  .attr("class", "line-chart-label-axis")
+  .style("text-anchor", "middle")
+  .attr("transform", "translate(20, 300) rotate(-90)")
+  .text(yAxisLabel);
+
+  // svg.append("text")
+  // .attr("id", "line-chart-title")
+  // .attr("x", 455)
+  // .attr("y", 32)
+  // .style("text-anchor", "middle")
+  // .text(title);
   
   const path = g.append("path")
   .datum(singlePlaceData)
@@ -111,28 +141,6 @@ function drawLineChart(allCovidData) {
       .duration(1000)
       .ease(d3.easeLinear)
       .attr("stroke-dashoffset", 0); 
-
-  //console.log("total length:", totalLength);
-
-  // path.select("line-for-animation")
-
-
-  // d3.select(path[0][0])
-  // .transition()
-  // .duration(5000)
-  // .ease(d3.easeLinear)
-  // .attr("stroke-dashoffset", 0);
-
-
-
-
-  // g.select("path")
-  // .transition()
-  // .duration(5000)
-  // .ease(d3.easeLinear);
-
-  g.append('text')
-    .text(title);
 
 }
 
