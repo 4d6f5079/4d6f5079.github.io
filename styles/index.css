@@ -1,10 +1,15 @@
-body {
-  margin-top: 0px;
-  margin-left: 0px;
-  margin-right: 0px;
-  /* margin-bottom: 0px; */
-  background-color: #d1d1d1;
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
   font-family: sans-serif;
+}
+
+body {
+  background-color: #d1d1d1;
+  overflow-x: hidden;
 }
 
 svg {
@@ -34,19 +39,17 @@ path {
   justify-content: space-evenly;
   gap: 15px;
   align-items: center;
-  overflow-x: hidden;
 }
 
 #inputs-container {
   border: 1px solid #009de6;
-  box-shadow: 0px 0px 20px 1px #009de6;
+  box-shadow: 1px 0px 20px 1px #009de6;
   align-self: stretch;
   background: linear-gradient(to top, #00a8f6, #02c8da);
   border-radius: 2px;
   background-size: 200% auto;
   padding-top: 5px;
-  padding-top: 5px;
-  padding-bottom: 10px;
+  padding-bottom: 5px;
   top: 0; /* for sticky to work */
   position: sticky; /* sticks the inputs to the top of the page when it has been scrolled */
   margin-top: 0px;
@@ -60,13 +63,10 @@ path {
 
 .viz-container {
   display: flex;
+  flex: 1 0 45%;
   justify-content: space-evenly;
   gap: 25px;
   flex-flow: row wrap;
-}
-
-.axis {
-  font: 14px sans-serif;
 }
 
 #d3-map {
@@ -74,6 +74,10 @@ path {
   cursor: grab;
   cursor: -moz-grab;
   cursor: -webkit-grab;
+}
+
+#map-container {
+  margin-top: 3px;
 }
 
 /* Apply a "closed-hand" cursor during drag operation.*/
@@ -90,13 +94,42 @@ path {
   height: 520px;
   overflow-y: scroll;
 }
+
 #xaxis {
   margin-right: 5%;
 }
-#horizontalHeader {
+
+.align-text-center-bar-chart {
   text-align: center;
   margin-left: 3%;
   margin-right: 3%;
+  margin-bottom: 3%;
+  margin-top: 3px;
+}
+
+.align-text-center-pie-chart {
+  text-align: center;
+  margin-right: 10%;
+  margin-left: 10%;
+  margin-bottom: 5px;
+  margin-top: 5px;
+}
+
+.near-button-text {
+  font-weight: bold;
+  /* text-shadow: 0px 1px 2px rgb(0, 0, 0); UNCOMMENT THIS IF TEXT SHADOW IS NEEDED*/
+}
+
+.flex-buttons-with-near-text {
+  display: flex;
+  gap: 2px;
+  justify-content: center;
+  align-items: center;
+  flex-flow: column wrap;
+}
+
+.axis {
+  font: 14px sans-serif;
 }
 
 #line-chart {

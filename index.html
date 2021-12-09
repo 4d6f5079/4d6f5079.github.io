@@ -13,8 +13,10 @@
     <div id="div-container">
       <!-- Top and Bottom -->
       <div id="inputs-container">
-        <div id="date-picker-container">
-          <label for="CoVid-19-date">Select date: </label>
+        <div class="flex-buttons-with-near-text" id="date-picker-container">
+          <label class="near-button-text" for="CoVid-19-date"
+            >Select date</label
+          >
           <input
             type="date"
             id="selectedDate"
@@ -34,8 +36,11 @@
           Show Province Mode
         </button>
 
-        <div id="category-selection-container">
-          <label>Select category: </label>
+        <div
+          class="flex-buttons-with-near-text"
+          id="category-selection-container"
+        >
+          <label class="near-button-text">Select category</label>
           <select
             name="covid-category"
             id="covid-category"
@@ -54,11 +59,10 @@
         </div>
 
         <div id="horizontal-chart-container">
-          <h1 id="horizontalHeader"></h1>
+          <h1 class="align-text-center-bar-chart" id="horizontalHeader"></h1>
           <div id="horizontal-chart"></div>
           <div id="xaxis"></div>
         </div>
-      </div>
 
 
       <div class="viz-container">
@@ -68,7 +72,7 @@
         </div>
 
         <div id="pie-chart-container">
-          <h1 id="pieHeader"></h1>
+          <h1 class="align-text-center-pie-chart" id="pieHeader"></h1>
           <div id="pie-chart"></div>
         </div>
       </div>
