@@ -68,8 +68,8 @@ function drawLineChart(allCovidData) {
     .append("svg")
     .attr("id", svgId)
     .attr("width", widthLineChart)
-    .attr("height", heightLineChart)
-    .attr("transform", `translate(${margin.left}, ${margin.top})`);
+    .attr("height", heightLineChart);
+    // .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
   const g = svg.append("g")
     .attr("transform", `translate(${margin.left}, ${margin.top})`);
