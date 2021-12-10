@@ -16,11 +16,17 @@ svg {
   background-color: #d1d1d1;
 }
 
-path {
+#d3-map path {
   opacity: 0.6;
   stroke: rgb(0, 0, 0);
   stroke-width: 1;
   cursor: pointer;
+}
+
+path {
+  opacity: 0.6;
+  stroke: rgb(0, 0, 0);
+  stroke-width: 1;
 }
 
 .tooltip {
@@ -93,6 +99,7 @@ path {
   width: 940px;
   height: 520px;
   overflow-y: scroll;
+  overflow-x: hidden;
 }
 
 #xaxis {
