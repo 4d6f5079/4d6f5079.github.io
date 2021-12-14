@@ -38,6 +38,13 @@ path {
   border-radius: 10px;
 }
 
+.heading {
+  color: rgb(7, 7, 7);
+  font-size: 25px;
+  font-family: 'Trattatello';
+  font-weight: bold;
+}
+
 #div-container {
   display: flex;
   flex-direction: column;
