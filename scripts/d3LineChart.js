@@ -12,6 +12,12 @@ function removeLineChart() {
 // parses date string with given format to a Date object
 const parseDate = d3.timeParse("%Y-%m-%d %I:%M:%S");
 
+/**
+ * Draws cumulative temporal COVID-19 data on the line chart of the selected area.
+ * 
+ * @param {List[Object]} allCovidData COVID-19 data with GeoJSON coordinates
+ * @returns None
+ */
 function drawLineChart(allCovidData) {
   if (!selectedPlace) return;
 

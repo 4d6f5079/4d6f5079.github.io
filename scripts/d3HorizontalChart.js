@@ -1,26 +1,59 @@
+
+/**
+ * Determines whether the header text message should contain municipality or province.
+ * 
+ * @returns Title to draw on the header of the horizontal bar chart
+ */
 function getTitleText() {
     const mode = municipalityMode ? "Municipalities" : "Provinces"
     return `${mode} with descending ${selectedCategory}`;
 }
+
+/**
+ * Returns proper name based on municipality mode. 
+ * Returns name of province in Province Mode.
+ * Returns name of municipality in Municipality Mode.
+ * 
+ * @param {Object} d path data
+ * @returns Correct area name.
+ */
 function getMode(d) {
     return municipalityMode ? d.properties.areaName : d.properties.name
 }
+
+/**
+ * Checks selected category to derive which value to return.
+ *  
+ * @param {Object} covidD object containing quantitative values of an area 
+ * @returns Integer value of the required quantitative value
+ */
 function getCategory(covidD) {
     return (selectedCategory === "COVID-19 Infections") ? 
         +covidD.Total_reported : (selectedCategory === "Hospital Admissions") ?
         +covidD.Hospital_admission : +covidD.Deceased;
 }
 
+/**
+ * Wrapper function that does the same as getCategory function
+ * but also checks for undefined values. 
+ * 
+ * @param {Object} d path object
+ * @returns Integer value of the required quantitative value
+ */
 function getCatWithUndefCheck(d) {
     const covidD = d.properties[covidObjectKey]
     if (covidD !== undefined) {
-        const category = getCategory(covidD);
-        return category;
+        return getCategory(covidD);
     } else {
         return undefined;
     }
 }
 
+/**
+ * Draws each municipality/province COVID-19 values on a horizontal bar chart.
+ * 
+ * @param {List[Object]} data Joined GeoJSON data with COVID-19 data.
+ */
 function drawHorizontalBarChart(data) {
     if (d3.select("svg.chart")) d3.select("svg.chart").remove();
     if (d3.select("svg.x-axis")) d3.select("svg.x-axis").remove();
