@@ -32,11 +32,11 @@ function drawLineChart(allCovidData) {
   // Functions to select needed data
   const xValue = d => parseDate(d.Date_of_report);
   var yValue = d => +d.Total_reported;
-  if (selectedCategory === "Covid-19 Infections") {
+  if (selectedCategory === "COVID-19 Infections") {
     yValue = d => +d.Total_reported;
     categoryColor = "#ec5353";
     yAxisLabel = "Infected";
-    title = `Covid-19 Infections in ${selectedPlace}`;
+    title = `COVID-19 Infections in ${selectedPlace}`;
   } else if(selectedCategory === "Hospital Admissions") {
     yValue = d => +d.Hospital_admission;
     categoryColor = "#0d2bfc";

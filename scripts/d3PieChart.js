@@ -37,7 +37,7 @@ function initPieLegend(colors, svg_chart) {
         .attr("y", 9)
         .attr("dy", ".35em")
         .text(function(d, i) { 
-                return (i === 0) ? "Covid-19 Infections" : (i === 1) ? "Hospital Admissions" : "Deceased";
+                return (i === 0) ? "COVID-19 Infections" : (i === 1) ? "Hospital Admissions" : "Deceased";
         })
         .attr("transform", "translate(" + dx + "," + dy + ")")
         .attr("fill-opacity", 0)
