@@ -47,11 +47,11 @@ const path = d3.geoPath()
     .projection(projection)
 
 function initLegend() {
-    colors = (selectedCategory === "Covid-19 Infections") ? 
+    colors = (selectedCategory === "COVID-19 Infections") ? 
         total_reported_colors : (selectedCategory === "Hospital Admissions") ?
         hospital_admission_colors : deceased_colors;
 
-    ranges = (selectedCategory === "Covid-19 Infections") ? 
+    ranges = (selectedCategory === "COVID-19 Infections") ? 
                 (municipalityMode ? total_reported_ranges_municipalities : total_reported_ranges_provinces) :
             (selectedCategory === "Hospital Admissions") ?
                 (municipalityMode ? hospital_admission_ranges_municipalities : hospital_admission_ranges_provinces) : 
@@ -142,6 +142,8 @@ function mouseclicked(dataOfPath) {
         .call(zoom.transform, d3.zoomIdentity.translate(translate[0], translate[1]).scale(clickZoomScale));
 
     drawLineChart(covidCumulative);
+    
+    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })
 }
 
 function zoomFunction() {
@@ -306,9 +308,9 @@ function tooltipText(d) {
     + (
         (d.properties[covidObjectKey] !== undefined) 
         ? (
-            (selectedCategory === "Covid-19 Infections") ? "<br\/>Total_reported: " + d.properties[covidObjectKey].Total_reported 
-                : (selectedCategory === "Hospital Admissions") ? "<br\/>Hospital_admission: " + d.properties[covidObjectKey].Hospital_admission
-            : "<br\/>Deceased: " + d.properties[covidObjectKey].Deceased
+            (selectedCategory === "COVID-19 Infections") ? "<br\/>COVID-19 Infections: " + d.properties[covidObjectKey].Total_reported 
+                : (selectedCategory === "Hospital Admissions") ? "<br\/>Hospital Admissions: " + d.properties[covidObjectKey].Hospital_admission
+            : "<br\/>Deceased cases: " + d.properties[covidObjectKey].Deceased
             ) 
         : ""
     );

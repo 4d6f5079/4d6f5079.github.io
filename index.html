@@ -13,6 +13,9 @@
     <div id="div-container">
       <!-- Top and Bottom -->
       <div id="inputs-container">
+        <div class="heading">
+          Interactive COVID-19 Data Visualizations in The Netherlands
+        </div>
         <div class="flex-buttons-with-near-text" id="date-picker-container">
           <label class="near-button-text" for="CoVid-19-date"
             >Select date</label
@@ -22,7 +25,7 @@
             id="selectedDate"
             name="covid-period"
             onchange="updateDate(this);"
-            value="2021-01-06"
+            value="2021-01-07"
             min="2020-01-11"
             max="2021-11-18"
           />
@@ -46,7 +49,7 @@
             id="covid-category"
             onchange="updateCategory();"
           >
-            <option value="Covid-19 Infections">Covid-19 Infections</option>
+            <option value="COVID-19 Infections">COVID-19 Infections</option>
             <option value="Hospital Admissions">Hospital Admissions</option>
             <option value="Deceased">Deceased</option>
           </select>

@@ -6,7 +6,7 @@ function getMode(d) {
     return municipalityMode ? d.properties.areaName : d.properties.name
 }
 function getCategory(covidD) {
-    return (selectedCategory === "Covid-19 Infections") ? 
+    return (selectedCategory === "COVID-19 Infections") ? 
         +covidD.Total_reported : (selectedCategory === "Hospital Admissions") ?
         +covidD.Hospital_admission : +covidD.Deceased;
 }
@@ -96,10 +96,10 @@ function drawHorizontalBarChart(data) {
     .attr('id', 'bg-gradient')
     // .attr('gradientTransform', 'rotate(90)');
 
-    const startColor = (selectedCategory === "Covid-19 Infections") ? 
+    const startColor = (selectedCategory === "COVID-19 Infections") ? 
     "#F2C66B" : (selectedCategory === "Hospital Admissions") ?
     "#00FFFF" : "#ADFF2F";
-    const stopColor = (selectedCategory === "Covid-19 Infections") ? 
+    const stopColor = (selectedCategory === "COVID-19 Infections") ? 
     "#D13D73" : (selectedCategory === "Hospital Admissions") ?
     "#0000FF" : "#006400";
     bgGradient
