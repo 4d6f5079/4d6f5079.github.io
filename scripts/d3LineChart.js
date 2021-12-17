@@ -18,20 +18,21 @@ function drawLineChart(allCovidData) {
   if (d3.select(`svg#${svgId}`)) d3.select(`svg#${svgId}`).remove();
 
   // Filter to only contain needed elements
-  let singlePlaceData = allCovidData.filter(obj => {
+  const singlePlaceData = allCovidData.filter(obj => {
     if (municipalityMode) {
       return obj.Municipality_name === selectedPlace;
     }
     return (obj.Municipality_name === "" && obj.Province === selectedPlace);
   });
 
-  var categoryColor = "";
-  var yAxisLabel = "";
-  var title = "";
+  let categoryColor = "";
+  let yAxisLabel = "";
+  let title = "";
 
   // Functions to select needed data
   const xValue = d => parseDate(d.Date_of_report);
-  var yValue = d => +d.Total_reported;
+  let yValue;
+
   if (selectedCategory === "COVID-19 Infections") {
     yValue = d => +d.Total_reported;
     categoryColor = "#ec5353";
@@ -80,15 +81,15 @@ function drawLineChart(allCovidData) {
   const yAxis = d3.axisLeft(yScale);
 
   // Append g tag for the line chart axis
-  const xAxisWithG = g.append("g").call(xAxis)
+  g.append("g").call(xAxis)
     .attr("transform", `translate(0, ${heightL})`)
     .attr("class", "axis-values");
 
-  const yAxisWithG = g.append("g").call(yAxis)
+  g.append("g").call(yAxis)
     .attr("class", "axis-values");
 
   // Giving a title to the line chart
-  const header = d3.select("#lineChartHeader").html(title);
+  d3.select("#lineChartHeader").html(title);
     
   // Appending x axis label
   svg.append("text")

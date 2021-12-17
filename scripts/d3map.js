@@ -46,6 +46,9 @@ const formatDate = d3.timeFormat("%Y-%m-%d");
 const path = d3.geoPath()
     .projection(projection)
 
+/**
+ * Initialize the legend of the map
+ */
 function initLegend() {
     colors = (selectedCategory === "COVID-19 Infections") ? 
         total_reported_colors : (selectedCategory === "Hospital Admissions") ?
@@ -86,7 +89,9 @@ function initLegend() {
         });
 }
 
-// handle zooming into an area that has been clicked, with reset (reset zoom to initial default scale)
+/**
+ * Reset zooming of the map (reset zoom to initial default scale)
+ */
 function reset() {
     zoomActive = d3.select(null);
 
@@ -95,7 +100,20 @@ function reset() {
     .call(zoom.transform, d3.zoomIdentity);
 }
 
+/**
+ * Handles the logic when an area is clicked. 
+ * 1. selectedPlace variable is assigned to the area name of the selected area.
+ * 2. zoomActive is assigned the node of the selected area, for reset functionality to work.
+ * 3. Draw the pie and line charts of the current selected area using the dataOfPath object.
+ * 4. Zoom in to the selected area using zoom transition to the area given the zoomScale value.
+ * 5. Smoothly scroll to the bottom of the page as the pie and line charts are drawn for convenience.
+ * 
+ * @param {Object} dataOfPath The object of the selected area on the map 
+ * @returns None
+ */
 function mouseclicked(dataOfPath) {  
+    if (zoomActive.node() === this) return reset();
+    
     if(municipalityMode) {
         selectedPlace = selectedPlace === undefined ? dataOfPath.properties.areaName : 
         selectedPlace === dataOfPath.properties.areaName ? null : dataOfPath.properties.areaName;
@@ -104,61 +122,42 @@ function mouseclicked(dataOfPath) {
         selectedPlace === dataOfPath.properties.name ? null : dataOfPath.properties.name;
     }
 
-    
-    
-
-
-    // TODO: keep place selected by keeping blue stroke
-    // if(selectedPlace) {
-    //     d3.select(this)
-    //     .transition(0)
-    //     .style("stroke", "blue")
-    //     .style("stroke-width", "2");
-    // } else {
-    //     d3.select(this)
-    //     .transition(0)
-    //     .style("stroke", "black")
-    //     .style("stroke-width", "1");
-    // }
-    // console.log(selectedPlace);
-
-    //updateCumulativeBarchart(selectedPlace);
-
-    if (zoomActive.node() === this) return reset();
-    
     zoomActive = d3.select(this);
-
-    drawPieChart(getCategoriesOf(dataOfPath), getMode(dataOfPath));
     d3.event.stopPropagation();
 
+    drawPieChart(getCategoriesOf(dataOfPath), getMode(dataOfPath));
+    drawLineChart(covidCumulative);
 
-    var bounds = path.bounds(dataOfPath);
-    var x = (bounds[0][0] + bounds[1][0]) / 2;
-    var y = (bounds[0][1] + bounds[1][1]) / 2;
-    var translate = [width / 2 - clickZoomScale * x, height / 2 - clickZoomScale * y];
+    const bounds = path.bounds(dataOfPath);
+    const x = (bounds[0][0] + bounds[1][0]) / 2;
+    const y = (bounds[0][1] + bounds[1][1]) / 2;
+    const translate = [width / 2 - clickZoomScale * x, height / 2 - clickZoomScale * y];
 
     svg.transition()
         .duration(750)
         .call(zoom.transform, d3.zoomIdentity.translate(translate[0], translate[1]).scale(clickZoomScale));
 
-    drawLineChart(covidCumulative);
-    
-    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })
+    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
 }
 
+/**
+ * Executes the zoom transformation to the selected area.
+ */
 function zoomFunction() {
     d3.select(`#${gElemId}`).attr("transform", d3.event.transform);
 }
 
-// create zoom funcionality for panning and zooming on the map.
-// call it on svg so that the zoom funcionality is used on the map.
+// Create zoom funcionality for panning and zooming on the map.
+// Call it on svg so that the zoom funcionality is used on the map.
 const zoom = d3.zoom()
     .translateExtent([[0, 0], [width, height]])
     .scaleExtent([scaleMinExtent, scaleMaxExtent])
     .on("zoom", zoomFunction);
 
+// Finally, call the zoom function on the svg directly.
 svg.call(zoom);
 
+// Tooltip object for showing a tooltip on the hovered area on the map.
 d3.helper = {};
 d3.helper.tooltip = function(accessor, flag){
     return function(selection){
@@ -216,6 +215,14 @@ d3.helper.tooltip = function(accessor, flag){
     };
 };
 
+/**
+ * Group COVID-19 data by province key and aggregates the quantitative values of each province.
+ * 
+ * @param {List[Object]} data The COVID-19 data 
+ * @returns 
+ *  List of objects with key being the province name and the value being the summed
+ *  COVID-19 infections, hospital admissions and deceased cases.
+ */
 function groupByValueAndSum(data) {
     const result = [];
 
@@ -233,7 +240,15 @@ function groupByValueAndSum(data) {
     return result;
 }
 
-function municipalityCheck() {
+/**
+ * Wrapper function that checks the municipality mode and
+ * joins the correct GeoJSON data with the COVID-19 data.
+ * 
+ * @returns 
+ * List of object, each containing geo-sptial path information 
+ * for each area on the map combined with COVID-19 data. 
+ */
+function joinCorrectGeoJSONDataWithCovidData() {
     if (municipalityMode) {
         return joinMapCovidCumulativeData(municipalitiesJson, covidCumulative);
     } else {
@@ -241,8 +256,17 @@ function municipalityCheck() {
     }
 }
 
+/**
+ * Link the GeoJSON data with COVID-19 data by joining them.
+ * 
+ * @param {Object} mapData The GeoJSON object data
+ * @param {List[Object]} covidData 
+ * @returns 
+ *  List of object, each containing geo-sptial path information 
+ *  for each area on the map combined with COVID-19 data.
+ */
 function joinMapCovidCumulativeData(mapData, covidData) {
-    // GET ONLY THE COVID DATA OF THE SELECTED DATE.
+    // Filter the COVID-19 data based on the selected date.
     const covidFilteredByDate = covidData.filter(obj => {
         if (obj.Municipality_code === '') return false;
         
@@ -250,12 +274,12 @@ function joinMapCovidCumulativeData(mapData, covidData) {
         return objDateString === selectedDate;
     });
 
-    // JOIN PROCESSED COVID DATA WITH GEOJSON DATA.
+    // Join filtered COVID-19 data with GeoJSON data.
     return mapData.features.map(e => {
         let placeObjRow;
         
         if (!municipalityMode) {
-            // ONLY GET GROUPED AND SUMMED COVID DATA WHEN PROVINCE MODE IS SELECTED.
+            // Aggregate COVID-19 data when province mode is selected based on province key.
             const groupedSummedPerProvince = groupByValueAndSum(covidFilteredByDate);
 
             placeObjRow = groupedSummedPerProvince.filter(elem => {
@@ -268,15 +292,18 @@ function joinMapCovidCumulativeData(mapData, covidData) {
             });
         }
 
-        if (placeObjRow.length > 1) {
-            return console.error(`Encountered multiple values while filtering for ${e.properties.areaName}. Result: ${placeObjRow}`);
-        } 
-
         e.properties[covidObjectKey] = placeObjRow[0];
         return e;
     });
 }
 
+/**
+ * Fetch an array of quantitative data corresponding to the selected area.
+ *  
+ * @param {Object} locationData path data of the selected area
+ * @returns 
+ *  List of COVID-19 infections, hosital admissions and deceased values of the selected area.
+ */
 function getCategoriesOf(locationData) {
     const covidD = locationData.properties[covidObjectKey];
     if (covidD !== undefined) {
@@ -285,6 +312,13 @@ function getCategoriesOf(locationData) {
         return undefined;
     }
 }
+
+/**
+ * Derive the correct fill color for a path on the map.
+ * 
+ * @param {Object} d path object of an area
+ * @returns Correct fill color of a path on the map. 
+ */
 function fillLocations(d) {
     const covidD = d.properties[covidObjectKey];
     if (covidD !== undefined) {
@@ -303,6 +337,13 @@ function fillLocations(d) {
     }
 }
 
+/**
+ * Derive correct message to show on the tooltip when area on the map is hovered
+ * based on municipality mode and selected category.
+ * 
+ * @param {Object} d path object of an area
+ * @returns Correct message to show on the tooltip. 
+ */
 function tooltipText(d) {
     return "<b>"+ (municipalityMode ? d.properties.areaName : d.properties.name)  + "</b>" 
     + (
@@ -316,17 +357,29 @@ function tooltipText(d) {
     );
 }
 
-function drawMap(data) {
-    // Clean/reset the map and legend to add new data to it. 
+/**
+ * Clean/reset the map and legend to add new data to it. 
+ */
+function removeMap() {
     if (d3.select(`#${gElemId}`)) d3.select(`#${gElemId}`).remove();
     if (d3.select(`g${legendClass}`)) d3.select(`g${legendClass}`).remove();
+}
+
+/**
+ * Draw the map on the page using the joined GeoJSON and COVID-19 data.
+ * 
+ * @param {List[Object]} data Joined GeoJSON data with COVID-19 data.
+ */
+function drawMap(data) {
+    removeMap();
     
     // initialize the legend for the map.
     initLegend();
     
-    // Append the g element where the paths will be stored and reset zoom if active.
+    // if the map is zoomed in already, reset the zoom when the map is drawn again.
     if (zoomActive) reset(); 
 
+    // Append the g element where the paths will be stored and reset zoom if active.
     g = svg.append("g")
     .attr("id", gElemId)
     .attr("transform", d3.zoomIdentity);
@@ -341,6 +394,3 @@ function drawMap(data) {
     .on("click", mouseclicked)
     .call(d3.helper.tooltip(tooltipText, true));
 }
-
-
-

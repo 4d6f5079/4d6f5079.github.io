@@ -1,15 +1,25 @@
 const pieLegendClassName  = ".pie-legend";
-const pie_width = 500,
-    pie_height = 500,
-    radius = Math.min(pie_width, pie_width) / 2 - 10;
+const svgPieClassName = ".pie";
+const pie_width = 500;
+const pie_height = 500;
+const radius = Math.min(pie_width, pie_width) / 2 - 10;
 const dx = -80, dy = -30;
 
+/**
+ * Remove the pie chart from the page.
+ */
 function removePieChart() {
     if (d3.select(`g${pieLegendClassName}`)) d3.select(`g${pieLegendClassName}`).remove();
-    if (d3.select("svg.pie")) d3.select("svg.pie").remove();
-    pieHeader.innerText = "";
+    if (d3.select(`svg${svgPieClassName}`)) d3.select(`svg${svgPieClassName}`).remove();
 }
 
+/**
+ * Initialize legend corresponding to the pie chart given the colors and reference
+ * to the svg chart.
+ * 
+ * @param {List[String]} colors 
+ * @param {D3 Component} svg_chart 
+ */
 function initPieLegend(colors, svg_chart) {
     const legend = svg_chart.append("g")
             .attr('class', 'pie-legend')
@@ -19,6 +29,7 @@ function initPieLegend(colors, svg_chart) {
             .data(colors)
             .enter().append('g')
             .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
+
     legend.append("rect")
         //that's 18px wide
         .attr("width", 18)
@@ -32,6 +43,7 @@ function initPieLegend(colors, svg_chart) {
         .attr("fill-opacity", 0)
         .transition().delay(2000).duration(1500)
         .attr("fill-opacity", 1)
+
     legend.append("text")
         .attr("x", 24)
         .attr("y", 9)
@@ -45,24 +57,33 @@ function initPieLegend(colors, svg_chart) {
         .attr("fill-opacity", 1)
 }
 
+/**
+ * Draws the pie chart given the data and location name.
+ * 
+ * @param {List[Object]} data COVID-19 data to use to draw the pie chart
+ * @param {String} locationName The selected area on the map
+ * @returns None
+ */
 function drawPieChart(data, locationName) {
-    if (d3.select(`g${pieLegendClassName}`)) d3.select(`g${pieLegendClassName}`).remove();
-    if (d3.select("svg.pie")) d3.select("svg.pie").remove();
+    removePieChart();
+
     if (data !== undefined) {
         pieHeader.innerText = `Category distribution of ${locationName}`;
     } else {
         pieHeader.innerText = `Categories of ${locationName} are undefined`;
+        return;
     }
 
     const topData = data.sort((a, b) => d3.descending(a,b))
-
     const sum = d3.sum(data);
     const colors = ["Red", "Blue", "Green"];
-    var arc = d3.arc()
+
+    const arc = d3.arc()
     .outerRadius(radius)
 
-    var pie = d3.pie();
-    var svg_chart = d3.select("#pie-chart").append("svg")
+    const pie = d3.pie();
+
+    const svg_chart = d3.select("#pie-chart").append("svg")
         .datum(topData)
         .attr('class', 'pie')
         .attr("width", pie_width)
@@ -74,17 +95,19 @@ function drawPieChart(data, locationName) {
     .data(pie)
     .enter().append("g")
     .attr("class", "arc");
+
     arcs
-        .append("path")
-        .attr("fill", function(d, i) {
-            return colors[i]; 
-        })
-        // .style("fill-opacity", 0.75)
-        .call(d3.helper.tooltip(function(d, i) {
+    .append("path")
+    .attr("fill", function(d, i) {
+        return colors[i]; 
+    })
+    .call(
+        d3.helper.tooltip(function(d, i) {
             const percentage = (d.data/sum * 100);
             return `Amount: ${d.data}` + 
             "<br\/>" + `Amount in percentage: ${(Math.round(percentage * 1000) / 1000)}%`;
-        }, true))
+        }, true)
+    )
     .transition()
         .ease(d3.easeBounce)
         .duration(1000)
@@ -94,19 +117,18 @@ function drawPieChart(data, locationName) {
         .delay(function(d, i) { return 1000 + i * 50; })
         .duration(1500)
         .attrTween("d", tweenDonut)
+    
+    function tweenPie(b) {
+        b.innerRadius = 0;
+        const i = d3.interpolate({startAngle: 0, endAngle: 0}, b);
+        return function(t) { return arc(i(t)); };
+    }
+    
+    function tweenDonut(b) {
+        b.innerRadius = radius * .6;
+        const i = d3.interpolate({innerRadius: 0}, b);
+        return function(t) { return arc(i(t)); };
+    }
 
     initPieLegend(colors, svg_chart);
-
-    function tweenPie(b) {
-    b.innerRadius = 0;
-    var i = d3.interpolate({startAngle: 0, endAngle: 0}, b);
-    return function(t) { return arc(i(t)); };
-    }
-
-    function tweenDonut(b) {
-    b.innerRadius = radius * .6;
-    var i = d3.interpolate({innerRadius: 0}, b);
-    return function(t) { return arc(i(t)); };
-    }
-
 }

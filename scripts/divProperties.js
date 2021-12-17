@@ -3,9 +3,9 @@ function updateDate(dateObject) {
 
     selectedDate = dateObject.value;
     
-    const data = municipalityCheck();
+    const data = joinCorrectGeoJSONDataWithCovidData();
     
-    // Line chart is not redrawn as it ranges over all dates
+    // Line chart is not redrawn as it ranges over all dates and not specific for a single date.
     drawMap(data);
     drawHorizontalBarChart(data);
 }
@@ -16,7 +16,8 @@ function updateCategory() {
     
     selectedCategory = document.getElementById("covid-category").value;
 
-    const data = municipalityCheck();
+    const data = joinCorrectGeoJSONDataWithCovidData();
+
     drawMap(data);
     drawHorizontalBarChart(data);
     drawLineChart(covidCumulative);
@@ -25,7 +26,8 @@ function updateCategory() {
 function toggleRegionArea() {
     if (!municipalitiesJson && !provinceJson && !covidCumulative) return;
     
-    municipalityMode = !municipalityMode;
+    municipalityMode = !municipalityMode; // toggle municipality mode
+    selectedPlace = undefined; // reset selectedPlace so that line chart is not drawns when no area is selected.
 
     if (municipalityMode) {
         document.getElementById("toggleAreaButton").innerHTML = "Show Province Mode";
@@ -33,7 +35,8 @@ function toggleRegionArea() {
         document.getElementById("toggleAreaButton").innerHTML = "Show Municipality Mode";
     }
     
-    const data = municipalityCheck();
+    const data = joinCorrectGeoJSONDataWithCovidData();
+
     drawMap(data);
     drawHorizontalBarChart(data);
 }

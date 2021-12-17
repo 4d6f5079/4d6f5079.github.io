@@ -83,7 +83,7 @@ path {
 }
 
 #d3-map {
-  cursor: move; /* fallback if grab cursor is unsupported */
+  cursor: move;
   cursor: grab;
   cursor: -moz-grab;
   cursor: -webkit-grab;
@@ -93,7 +93,7 @@ path {
   margin-top: 3px;
 }
 
-/* Apply a "closed-hand" cursor during drag operation.*/
+/* Closed-hand cursor during drag operation.*/
 #d3-map:active,
 #d3-map path:active {
   cursor: pointer;
@@ -131,7 +131,6 @@ path {
 
 .near-button-text {
   font-weight: bold;
-  /* text-shadow: 0px 1px 2px rgb(0, 0, 0); UNCOMMENT THIS IF TEXT SHADOW IS NEEDED*/
 }
 
 .flex-buttons-with-near-text {
@@ -269,7 +268,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   border: none;
   border-radius: 15px;
   box-shadow: 0px 2px 4px 1px #474747;
-  /* box-shadow: 1px 10px #00a8f6 1px; */
   display: block;
 }
 
@@ -280,8 +278,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 
 .button:active {
-  /* background-color: #3e8e41; */
-  /* box-shadow: 0 3px #00e8fd; */
   transform: translateY(1px);
 }
 
@@ -304,18 +300,11 @@ select {
     100% / 15% no-repeat #3cd3ad;
 }
 
-/* select:focus {
-  border-color: #4cb8c4;
-  background-color: #3cd3ad;
-} */
-
-/* Internet Explorer hackery ahead */
-
 select::-ms-expand {
-  display: none; /* Remove default arrow in Internet Explorer 10 and 11 */
+  display: none; /* IE 10 and 11 -> Removal default arrow */
 }
 
-/* Target Internet Explorer 9 to undo the custom arrow */
+/* Undo the custom arrow on IE 9 */
 @media screen and (min-width: 0\0) {
   select {
     background: none\9;
